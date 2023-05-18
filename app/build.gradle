@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'github.eekidu.dev.devlayout'
+    namespace 'github.eekidu.dev.devlayout.demo'
     compileSdk 33
 
     defaultConfig {
-        applicationId "github.eekidu.dev.devlayout"
+        applicationId "github.eekidu.dev.devlayout.demo"
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -42,5 +42,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    api project(":DevLayout")
+    api project(":dev-layout")
 }

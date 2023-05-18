@@ -13,7 +13,7 @@
         android:theme="@style/Theme.DevLayout"
         tools:targetApi="31">
         <activity
-            android:name="github.eekidu.dev.devlayout.MainActivity"
+            android:name="com.github.eekidu.dev.devlayout.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
