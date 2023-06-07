@@ -11,19 +11,18 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Space;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 
-import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
 import com.github.eekidu.dev.devlayout.child.EditorTextLayout;
 import com.github.eekidu.dev.devlayout.child.RadioGroupLayout;
 import com.github.eekidu.dev.devlayout.child.SeekBarLayout;
+import com.github.eekidu.dev.devlayout.child.TitleAndDescLayout;
+import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
-
-import java.util.Arrays;
 
 /**
  * 快速添加测试控件的布局
@@ -32,6 +31,8 @@ import java.util.Arrays;
  * @date 2021/10/12
  */
 public class DevLayout extends LinearLayout {
+
+
     private FlexboxLayout mFlexboxLayout;
     private boolean mIsLineStyleFlag;
 
@@ -94,51 +95,40 @@ public class DevLayout extends LinearLayout {
      * @param desc
      * @return
      */
-    public DevLayout addTitleAndDesc(@Nullable String title, @Nullable String desc) {
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        linearLayout.setOrientation(VERTICAL);
-
-        TextView titleTextView = new TextView(getContext());
-        titleTextView.setTextSize(18);
-        titleTextView.setTextColor(Color.BLACK);
-        titleTextView.setText(title);
-        linearLayout.addView(titleTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        TextView valueTextView = new TextView(getContext());
-        valueTextView.setText(desc);
-        valueTextView.setTextColor(Color.GRAY);
-        linearLayout.addView(valueTextView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        mFlexboxLayout.addView(linearLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return this;
+    public TitleAndDescLayout addTitleAndDesc(@Nullable String title, @Nullable String desc) {
+        TitleAndDescLayout titleAndDescLayout = new TitleAndDescLayout(getContext());
+        titleAndDescLayout.setTitle(title);
+        titleAndDescLayout.setDesc(desc);
+        mFlexboxLayout.addView(titleAndDescLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return titleAndDescLayout;
     }
 
 
-    public DevLayout addSwitch(String actionName, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+    public SwitchCompat addSwitch(String actionName, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
         return addSwitch(actionName, onCheckedChangeListener, false);
     }
 
-    public DevLayout addSwitch(String actionName, CompoundButton.OnCheckedChangeListener onCheckedChangeListener, boolean defaultCheck) {
-        Switch button = new Switch(getContext());
-        button.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-        button.setText(actionName);
+    public SwitchCompat addSwitch(String actionName, CompoundButton.OnCheckedChangeListener onCheckedChangeListener, boolean defaultCheck) {
+        SwitchCompat aSwitch = new SwitchCompat(getContext());
+        aSwitch.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        aSwitch.setText(actionName);
         int padding = DevLayoutUtil.dp2px(10);
-        button.setPadding(padding, 0, padding, 0);
-        button.setOnCheckedChangeListener(onCheckedChangeListener);
+        aSwitch.setPadding(padding, 0, padding, 0);
+        aSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         if (defaultCheck) {
-            button.setChecked(true);
+            aSwitch.setChecked(true);
         }
-        mFlexboxLayout.addView(button, new ViewGroup.LayoutParams(getWidthParam(), ViewGroup.LayoutParams.WRAP_CONTENT));
-        return this;
+        mFlexboxLayout.addView(aSwitch, new ViewGroup.LayoutParams(getWidthParam(), ViewGroup.LayoutParams.WRAP_CONTENT));
+        return aSwitch;
     }
 
-    public DevLayout addCheckBox(String title, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+    public CheckBox addCheckBox(String title, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
         CheckBox checkBox = new CheckBox(getContext());
         checkBox.setText(title);
         checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
         checkBox.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         mFlexboxLayout.addView(checkBox, new ViewGroup.LayoutParams(getWidthParam(), ViewGroup.LayoutParams.WRAP_CONTENT));
-        return this;
+        return checkBox;
     }
 
 
@@ -156,6 +146,10 @@ public class DevLayout extends LinearLayout {
     }
 
 
+    /**
+     * @param title
+     * @return Value TextView
+     */
     public TextView addTextView(String title) {
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setGravity(Gravity.CENTER_VERTICAL);
@@ -164,13 +158,11 @@ public class DevLayout extends LinearLayout {
         titleTextView.setText(title + ": ");
         linearLayout.addView(titleTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-
         TextView valueTextView = new TextView(getContext());
         valueTextView.setText("--");
         valueTextView.setMinWidth(DevLayoutUtil.dp2px(100));
         LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         linearLayout.addView(valueTextView, params1);
-
 
         FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(getWidthParam(), ViewGroup.LayoutParams.WRAP_CONTENT);
         mFlexboxLayout.addView(linearLayout, params);

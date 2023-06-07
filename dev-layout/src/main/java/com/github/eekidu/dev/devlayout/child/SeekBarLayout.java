@@ -137,11 +137,23 @@ public class SeekBarLayout extends LinearLayout {
         return this;
     }
 
+
+    public SeekBarLayout setMax(int max) {
+        mSeekBar.setMax(max);
+        return this;
+    }
+
+    public SeekBarLayout setProgress(int progress) {
+        mSeekBar.setProgress(progress);
+        return this;
+    }
+
     /**
      * 设置进度回调
      */
-    public void setOnProgressChangeListener(OnProgressChangeListener progressListener) {
+    public SeekBarLayout setOnProgressChangeListener(OnProgressChangeListener progressListener) {
         mProgressListener = progressListener;
+        return this;
     }
 
     /**
@@ -150,8 +162,9 @@ public class SeekBarLayout extends LinearLayout {
      *
      * @param onSeekBarChangeListener
      */
-    public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener onSeekBarChangeListener) {
+    public SeekBarLayout setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener onSeekBarChangeListener) {
         mOnSeekBarChangeListener = onSeekBarChangeListener;
+        return this;
     }
 
 
@@ -167,13 +180,5 @@ public class SeekBarLayout extends LinearLayout {
         return mValueTv;
     }
 
-    public SeekBarLayout setMax(int max) {
-        mSeekBar.setMax(max);
-        return this;
-    }
 
-    public SeekBarLayout setProgress(int progress) {
-        mSeekBar.setProgress(progress);
-        return this;
-    }
 }
