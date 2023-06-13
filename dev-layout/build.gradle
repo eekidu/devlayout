@@ -1,8 +1,6 @@
 plugins {
     id 'com.android.library'
-//    id 'maven-publish'
 }
-
 
 android {
     namespace 'github.eekidu.dev.devlayout'
@@ -26,32 +24,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-//    publishing {
-//        singleVariant('release') {
-//            withSourcesJar()
-//            withJavadocJar()
-//        }
-//    }
 }
-
-
-//afterEvaluate {
-//    publishing {
-//        publications {
-//            release(MavenPublication) {
-//                from components.release
-//                groupId = 'com.github.eekidu' //groupId 随便取
-//                artifactId = 'dev-layout'  //test随便取
-//                version = '1.0.1'
-//            }
-//        }
-//    }
-//}
 
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
-    implementation 'androidx.annotation:annotation:1.1.0'
 }

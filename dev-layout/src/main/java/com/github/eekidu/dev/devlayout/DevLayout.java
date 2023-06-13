@@ -103,6 +103,10 @@ public class DevLayout extends LinearLayout {
         return titleAndDescLayout;
     }
 
+    public TitleAndDescLayout addTitleBar(@Nullable String title) {
+        return addTitleAndDesc(title, null);
+    }
+
 
     public SwitchCompat addSwitch(String actionName, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
         return addSwitch(actionName, onCheckedChangeListener, false);
