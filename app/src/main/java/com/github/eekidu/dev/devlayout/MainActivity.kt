@@ -143,6 +143,18 @@ class MainActivity : AppCompatActivity() {
         }
         radioGroup.setChecked(2)
 
+
+        devLayout.addLine()
+        val addKeyValueText = devLayout.addKeyValueTextView()
+        addKeyValueText.maxHeight = 150
+        addKeyValueText.clearAndAddKV("说明", "键值展示")
+        addKeyValueText.addKV("耗时", 1098)
+        addKeyValueText.addKV("耗时2", 1098)
+        addKeyValueText.addKVLn("换行", "换行")
+
+
+        devLayout.addLine()
+
     }
 
     private fun toast(info: CharSequence) {

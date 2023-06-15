@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.github.eekidu.dev.devlayout.child.EditorTextLayout;
+import com.github.eekidu.dev.devlayout.child.KeyValueTextView;
 import com.github.eekidu.dev.devlayout.child.RadioGroupLayout;
 import com.github.eekidu.dev.devlayout.child.SeekBarLayout;
 import com.github.eekidu.dev.devlayout.child.TitleAndDescLayout;
@@ -42,7 +43,6 @@ public class DevLayout extends LinearLayout {
 
     public DevLayout(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
-
     }
 
     public DevLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -70,6 +70,11 @@ public class DevLayout extends LinearLayout {
         return button;
     }
 
+    /**
+     * @param desc
+     * @param btTitle
+     * @param onClickListener
+     */
     public void addTextViewAndButton(String desc, String btTitle, OnClickListener onClickListener) {
         LinearLayout linearLayout = new LinearLayout(getContext());
 
@@ -202,6 +207,19 @@ public class DevLayout extends LinearLayout {
         RadioGroupLayout radioGroupIndicatorView = new RadioGroupLayout(getContext());
         mFlexboxLayout.addView(radioGroupIndicatorView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return radioGroupIndicatorView;
+    }
+
+
+    /**
+     * 添加单选框
+     *
+     * @return
+     */
+    public KeyValueTextView addKeyValueTextView() {
+        KeyValueTextView keyValueLayout = new KeyValueTextView(getContext());
+        keyValueLayout.setMinHeight(DevLayoutUtil.dp2px(40));
+        mFlexboxLayout.addView(keyValueLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return keyValueLayout;
     }
 
     /**
