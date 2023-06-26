@@ -1,0 +1,34 @@
+version: '1.0'
+name: pipeline-20230626
+displayName: pipeline-20230626
+triggers:
+  trigger: auto
+  push:
+    branches:
+      prefix:
+        - ''
+stages:
+  - name: stage-0ff40e7f
+    displayName: 未命名
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@gradle
+        name: build_gradle
+        displayName: Gradle 构建
+        jdkVersion: '8'
+        gradleVersion: '4.4'
+        commands:
+          - '# Gradle默认构建命令'
+          - chmod +x ./gradlew
+          - ./gradlew assembleDebug
+        artifacts:
+          - name: BUILD_ARTIFACT
+            path:
+              - ./target
+        caches:
+          - ~/.gradle/caches
+        notify: []
+        strategy:
+          retry: '0'
