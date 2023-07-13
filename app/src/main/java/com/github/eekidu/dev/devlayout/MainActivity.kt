@@ -135,13 +135,17 @@ class MainActivity : AppCompatActivity() {
         radioGroup.addItem("选项2").setOnCheckListener { toast("选项2选中") }//直接设置该项选中监听
         radioGroup.addItem("选项3").setOnCheckListener { toast("选项3选中") }
         radioGroup.addItem(RadioGroupLayout.RadioItem("选项4") { toast("选项4执行") })
-
-        radioGroup.setListener { index, checkedId ->
-            when (index) {
-                0 -> toast("选项1")
-            }
-        }
         radioGroup.setChecked(2)
+
+        val radioGroup2 = devLayout.addRadioGroup("带标题的单项选择")
+        radioGroup2.addItem("选项4")
+        radioGroup2.addItem("选项5")
+        radioGroup2.addItem("选项6")
+        radioGroup2.addItem("选项7")
+
+        radioGroup2.setListener { index, checkedId ->//设置整体选中监听
+            toast("第${index}项选中")
+        }
 
 
         devLayout.addLine()
@@ -151,9 +155,6 @@ class MainActivity : AppCompatActivity() {
         addKeyValueText.addKV("耗时", 1098)
         addKeyValueText.addKV("耗时2", 1098)
         addKeyValueText.addKVLn("换行", "换行")
-
-
-        devLayout.addLine()
 
     }
 

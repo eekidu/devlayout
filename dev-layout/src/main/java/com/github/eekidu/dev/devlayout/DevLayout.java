@@ -3,6 +3,7 @@ package com.github.eekidu.dev.devlayout;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -197,6 +198,33 @@ public class DevLayout extends LinearLayout {
         return editorTextLayout;
     }
 
+    /**
+     * 添加单选框
+     *
+     * @return
+     */
+    public RadioGroupLayout addRadioGroup(String title) {
+        RadioGroupLayout radioGroupIndicatorView = new RadioGroupLayout(getContext());
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        linearLayout.setGravity(Gravity.CENTER_VERTICAL);
+        linearLayout.setOrientation(HORIZONTAL);
+
+        TextView textView = generetaTitleTv();
+        textView.setText(title + ":");
+        linearLayout.addView(textView);
+        linearLayout.addView(radioGroupIndicatorView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        mFlexboxLayout.addView(linearLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return radioGroupIndicatorView;
+    }
+
+    private TextView generetaTitleTv() {
+        TextView textView = new TextView(getContext());
+        textView.setGravity(Gravity.CENTER);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        textView.setTextColor(Color.BLACK);
+        return textView;
+    }
 
     /**
      * 添加单选框
