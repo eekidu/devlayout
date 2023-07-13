@@ -148,13 +148,13 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        devLayout.addLine()
-        val addKeyValueText = devLayout.addKeyValueTextView()
+        devLayout.addLine()//分割线
+        val addKeyValueText = devLayout.addKeyValueTextView()//键值展示TextView
         addKeyValueText.maxHeight = 150
         addKeyValueText.clearAndAddKV("说明", "键值展示")
-        addKeyValueText.addKV("耗时", 1098)
-        addKeyValueText.addKV("耗时2", 1098)
-        addKeyValueText.addKVLn("换行", "换行")
+        addKeyValueText.addKV("参数1", "value1")
+        addKeyValueText.addKVLn("换行", "添加参数并换行")
+        addKeyValueText.addKV("耗时", 123)
 
     }
 

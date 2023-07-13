@@ -22,26 +22,33 @@ allprojects {
 最新版本：[![](https://jitpack.io/v/com.gitee.ksee/DevLayout.svg)](https://jitpack.io/#com.gitee.ksee/DevLayout)
 
 ```groovy
-implementation 'com.gitee.ksee:DevLayout:1.0.6'
+implementation 'com.gitee.ksee:DevLayout:版本号'
 
 ```
 
-## 使用
+## 使用，见Demo
 
 ```Kotlin
 
 var devLayout = DevLayout(this)
 
+/**
+ * 添加功能按钮
+ */
 devLayout.addAction("功能1") {
-    Toast.makeText(this@MainActivity, "功能1", Toast.LENGTH_SHORT).show()
-}.addAction("功能2") {
-    Toast.makeText(this@MainActivity, "功能2", Toast.LENGTH_SHORT).show()
-}.addAction("功能3") {
-    Toast.makeText(this@MainActivity, "功能3", Toast.LENGTH_SHORT).show()
-}.addAction("功能4") {
-    Toast.makeText(this@MainActivity, "功能4", Toast.LENGTH_SHORT).show()
-}.addAction("功能5") {
-    Toast.makeText(this@MainActivity, "功能5", Toast.LENGTH_SHORT).show()
+    toast("功能1")
 }
+
+/**
+ * 添加开关
+ */
+devLayout.addSwitch("开关1") { buttonView, isChecked ->
+    toast("开关1状态：$isChecked")
+}
+
+/**
+ * 添加换行
+ */
+devLayout.br()
 
 ```

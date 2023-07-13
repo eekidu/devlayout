@@ -2,6 +2,7 @@ package com.github.eekidu.dev.devlayout;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -209,7 +210,7 @@ public class DevLayout extends LinearLayout {
         linearLayout.setGravity(Gravity.CENTER_VERTICAL);
         linearLayout.setOrientation(HORIZONTAL);
 
-        TextView textView = generetaTitleTv();
+        TextView textView = generateTitleTv();
         textView.setText(title + ":");
         linearLayout.addView(textView);
         linearLayout.addView(radioGroupIndicatorView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -218,9 +219,10 @@ public class DevLayout extends LinearLayout {
         return radioGroupIndicatorView;
     }
 
-    private TextView generetaTitleTv() {
+    private TextView generateTitleTv() {
         TextView textView = new TextView(getContext());
         textView.setGravity(Gravity.CENTER);
+        textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         textView.setTextColor(Color.BLACK);
         return textView;
