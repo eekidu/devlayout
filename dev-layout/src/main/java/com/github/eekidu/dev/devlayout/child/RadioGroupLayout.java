@@ -189,48 +189,6 @@ public class RadioGroupLayout extends HorizontalScrollView {
     }
 
 
-    /**
-     * 最后一个tab显示半个的样式，暗示用户后面还有tab。
-     * 如果没有显示不全的tab，则通过调整间距使最后一个tab显示3/4。
-     * 暂时未上，产品后期统一调整
-     */
-    private void lastTabShowHalf() {
-        int screenWidth = DevLayoutUtil.getScreenWidth(getContext());
-        float customWidth = 0;// 总共需要分摊的宽度
-        int customCount = 0;//参与分摊的tab个数
-        boolean shouldJudgeFlag = false;//是否需要调整标记
-        for (int i = 0; i < mRadioGroup.getChildCount(); i++) {
-            View childAt = mRadioGroup.getChildAt(i);
-            Rect rect = new Rect();
-            boolean localVisibleRect = childAt.getGlobalVisibleRect(rect);
-            if (rect.left > screenWidth) {
-                shouldJudgeFlag = true;
-                break;
-            }
-            if (rect.left < screenWidth && rect.right > screenWidth) {
-                return;
-            }
-            if (rect.right < screenWidth) {
-                customWidth = screenWidth - rect.right + rect.width() * (1 - 0.75f);
-                customCount = i;
-            }
-        }
-
-        if (shouldJudgeFlag) {
-            if (customCount == 0) {
-                return;
-            }
-
-            float eachItemDiff = customWidth / customCount;
-            for (int i = 0; i < mRadioGroup.getChildCount() - 1; i++) {
-                View childAt = mRadioGroup.getChildAt(i);
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) childAt.getLayoutParams();
-                layoutParams.rightMargin += eachItemDiff;
-                childAt.setLayoutParams(layoutParams);
-            }
-        }
-    }
-
     public void setChecked(int position) {
         if (position >= 0 && position < mRadioGroup.getChildCount()) {
             int id = mRadioGroup.getChildAt(position).getId();

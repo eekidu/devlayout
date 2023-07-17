@@ -3,12 +3,9 @@ package com.github.eekidu.dev.devlayout.child;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -49,7 +46,7 @@ public class SeekBarLayout extends LinearLayout {
         super(context, attrs, defStyleAttr);
         setGravity(Gravity.CENTER_VERTICAL);
 
-        mTitleTv = new TextView(getContext());
+        mTitleTv = DevLayoutUtil.generateTitleTv(getContext());
         addView(mTitleTv);
 
         mValueTv = new TextView(getContext());

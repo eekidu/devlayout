@@ -2,8 +2,10 @@ package com.github.eekidu.dev.devlayout.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.widget.TextView;
 
 /**
@@ -23,18 +25,18 @@ public class DevLayoutUtil {
         return (int) (dpValue * scale + 0.5f);
     }
 
-    public static int getScreenWidth(Context context) {
-        return 0;
-    }
-
-    public static LinearLayout wrapperDesc(View view) {
-        LinearLayout linearLayout = new LinearLayout(view.getContext());
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-
-        TextView textView = new TextView(view.getContext());
-        textView.setText("说明：");
-        linearLayout.addView(textView);
-        linearLayout.addView(view);
-        return linearLayout;
+    /**
+     * 生成标题TextView
+     *
+     * @param context
+     * @return
+     */
+    public static TextView generateTitleTv(Context context) {
+        TextView textView = new TextView(context);
+        textView.setGravity(Gravity.CENTER);
+        textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        textView.setTextColor(Color.BLACK);
+        return textView;
     }
 }

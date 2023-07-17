@@ -210,7 +210,7 @@ public class DevLayout extends LinearLayout {
         linearLayout.setGravity(Gravity.CENTER_VERTICAL);
         linearLayout.setOrientation(HORIZONTAL);
 
-        TextView textView = generateTitleTv();
+        TextView textView = DevLayoutUtil.generateTitleTv(getContext());
         textView.setText(title + ":");
         linearLayout.addView(textView);
         linearLayout.addView(radioGroupIndicatorView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -219,14 +219,6 @@ public class DevLayout extends LinearLayout {
         return radioGroupIndicatorView;
     }
 
-    private TextView generateTitleTv() {
-        TextView textView = new TextView(getContext());
-        textView.setGravity(Gravity.CENTER);
-        textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        textView.setTextColor(Color.BLACK);
-        return textView;
-    }
 
     /**
      * 添加单选框

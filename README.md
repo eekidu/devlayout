@@ -1,6 +1,6 @@
 # DevLayout
 
-快速添加测试控件的布局
+动态添加常用调试控件，无需XML，简化调试页面开发过程
 
 [![](https://jitpack.io/v/com.gitee.ksee/DevLayout.svg)](https://jitpack.io/#com.gitee.ksee/DevLayout)
 

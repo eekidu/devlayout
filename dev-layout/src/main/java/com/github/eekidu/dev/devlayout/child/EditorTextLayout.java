@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
+
 /**
  * @author caohk
  * @date 2022/4/18
@@ -43,7 +45,8 @@ public class EditorTextLayout extends LinearLayout {
 
         setGravity(Gravity.CENTER_VERTICAL);
 
-        mTitleTextView = new TextView(getContext());
+        mTitleTextView = DevLayoutUtil.generateTitleTv(context);
+        mTitleTextView.setText("标题");
         addView(mTitleTextView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         LinearLayout linearLayout = new LinearLayout(getContext());

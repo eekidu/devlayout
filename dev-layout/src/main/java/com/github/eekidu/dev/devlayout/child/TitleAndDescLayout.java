@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
+
 /**
  * @author caohk
  * @date 2023/6/7
@@ -31,9 +33,8 @@ public class TitleAndDescLayout extends LinearLayout {
         super(context, attrs, defStyleAttr);
         setOrientation(VERTICAL);
 
-        mTitleTv = new TextView(getContext());
+        mTitleTv = DevLayoutUtil.generateTitleTv(getContext());
         mTitleTv.setTextSize(18);
-        mTitleTv.setTextColor(Color.BLACK);
         mTitleTv.setVisibility(GONE);
         addView(mTitleTv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 

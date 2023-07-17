@@ -22,7 +22,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(nestedScrollView)
 
 
-        devLayout.setIsLineStyle(false)//线性布局或者流式布局
+        devLayout.setIsLineStyle(false)//ture：线性布局，false：流式布局
+
+        /**
+         * 添加标题和描述
+         */
+        devLayout.addTitleAndDesc("DevLayout", "动态添加常用调试控件，无需XML，简化调试页面开发过程")
+        devLayout.addLine()//添加分割线
 
         /**
          * 添加功能按钮
@@ -80,9 +86,7 @@ class MainActivity : AppCompatActivity() {
         val seekBar2: SeekBarLayout = devLayout.addSeekBar("参数设置2").setMax(100).setProgress(50)
         seekBar2.setOnProgressChangeListener {
             seekBar2.valueTv.text = "${it}dp"//自定义显示
-        }
-
-        seekBar2.setEnableStep(true)
+        }.setEnableStep(true)//设置是否开启步进模式
 
 
         devLayout.addLine()
@@ -122,10 +126,6 @@ class MainActivity : AppCompatActivity() {
         devLayout.addLine()
         devLayout.p()//添加空白行，添加间距
 
-        /**
-         * 添加标题和描述
-         */
-        devLayout.addTitleAndDesc("添加标题", "为控件添加标题与说明信息……")
 
         /**
          * 添加单选框
