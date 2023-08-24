@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
 
@@ -76,7 +77,7 @@ public class EditorTextLayout extends LinearLayout {
 
         mImageView = new ImageView(getContext());
         mImageView.setOnClickListener(v -> mEditorText.setText(""));
-        mImageView.setImageDrawable(getContext().getDrawable(android.R.drawable.ic_menu_close_clear_cancel));
+        mImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), android.R.drawable.ic_menu_close_clear_cancel));
         mImageView.setVisibility(GONE);
         linearLayout.addView(mImageView);
 
