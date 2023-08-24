@@ -27,9 +27,8 @@ public class KeyValueTextView extends AppCompatTextView {
         mStringBuffer = new StringBuffer();
     }
 
-    public KeyValueTextView clearAndAddKV(String key, Object value) {
+    public KeyValueTextView clear() {
         mStringBuffer.delete(0, mStringBuffer.length());
-        addKV(key, value);
         return this;
     }
 
@@ -42,8 +41,7 @@ public class KeyValueTextView extends AppCompatTextView {
         return this;
     }
 
-    public KeyValueTextView addKVLn(String key, Object value) {
-        addKV(key, value);
+    public KeyValueTextView ln() {
         mStringBuffer.append("\n");
         return this;
     }

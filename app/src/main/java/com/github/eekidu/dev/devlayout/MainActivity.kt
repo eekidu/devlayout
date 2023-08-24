@@ -3,8 +3,6 @@ package com.github.eekidu.dev.devlayout
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.NestedScrollView
-import com.github.eekidu.dev.devlayout.child.RadioGroupLayout
 import com.github.eekidu.dev.devlayout.child.SeekBarLayout
 
 class MainActivity : AppCompatActivity() {
@@ -16,20 +14,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val devLayout = DevLayout(this)
+        setContentView(devLayout)
 
-        val nestedScrollView = NestedScrollView(this)
-        nestedScrollView.addView(devLayout)
-        setContentView(nestedScrollView)
-
-
-
-        devLayout.setIsLineStyle(false)//ture：线性布局，false：流式布局
 
         /**
          * 添加标题和描述
          */
-        devLayout.addTitleAndDesc("DevLayout", "动态添加常用调试控件，无需XML，简化调试页面开发过程")
-        devLayout.addLine()//添加分割线
+        devLayout.addTitleAndDesc("DevLayout", "使用代码动态添加常用调试控件，无需XML，简化调试页面开发过程")
+        devLayout.hr()//添加分割线
+
+        devLayout.addRadioGroup("流式Or线性")
+            .addItem("流式布局") {
+                devLayout.setIsLineStyle(false)
+            }.addItem("线性布局") {
+                devLayout.setIsLineStyle(true)
+            }.setChecked(0)
 
         /**
          * 添加功能按钮
@@ -37,10 +36,10 @@ class MainActivity : AppCompatActivity() {
         devLayout.addAction("功能1") {
             toast("功能1")
         }
-
         devLayout.addAction("功能2") {
             toast("功能2")
         }
+
         /**
          * 添加换行
          */
@@ -51,12 +50,12 @@ class MainActivity : AppCompatActivity() {
         }.addAction("功能4") {
             toast("功能4")
         }
-        val getButton = devLayout.addButton("功能5") {
+        devLayout.addButton("功能5") {
             toast("功能5")
         }
 
 
-        devLayout.addTextViewAndButton("为后面按钮的功能添加一些说明……", "按钮") {
+        devLayout.addDescribeAndButton("为后面按钮的功能添加一些说明……", "按钮") {
             toast("按钮")
         }
 
@@ -73,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
         devLayout.addSwitch("开关2") { _, isChecked ->
             toast("开关2状态：$isChecked")
-        }.apply { isChecked = true }
+        }.isChecked = true
 
         /**
          * 添加分割线
@@ -81,14 +80,17 @@ class MainActivity : AppCompatActivity() {
         devLayout.addLine()
 
         /**
-         * 添加进度条
+         * 添加SeekBar
          */
-        devLayout.addSeekBar("参数设置1") { }
-        val seekBar2: SeekBarLayout = devLayout.addSeekBar("参数设置2").setMax(100).setProgress(50)
-        seekBar2.setOnProgressChangeListener {
-            seekBar2.valueTv.text = "${it}dp"//自定义显示
-        }.setEnableStep(true)//设置是否开启步进模式
+        devLayout.addSeekBar("参数设置1") { progress ->
+            toast("参数设置1：$progress")
+        }
 
+        val seekBar2: SeekBarLayout =
+            devLayout.addSeekBar("参数设置2").setEnableStep(true)//设置是否开启步进模式
+        seekBar2.setOnProgressChangeListener { progress ->
+            seekBar2.valueTv.text = "${progress}dp"//自定义显示
+        }.setMax(100).setProgress(50)
 
         devLayout.addLine()
 
@@ -96,16 +98,16 @@ class MainActivity : AppCompatActivity() {
          * 添加文本框
          */
         val textView = devLayout.addTextView("文本展示")
-        devLayout.addAction("Toast展示") {
-            toast(textView.text)
-
-        }
 
         /**
          * 添加输入框
          */
         devLayout.addEditor("请输入") { editable ->
             textView.text = editable.toString()
+        }
+
+        devLayout.addAction("Toast展示") {
+            toast(textView.text)
         }
 
 
@@ -131,31 +133,34 @@ class MainActivity : AppCompatActivity() {
         /**
          * 添加单选框
          */
-        val radioGroup = devLayout.addRadioGroup()
-        radioGroup.addItem("选项1")
-        radioGroup.addItem("选项2") { toast("选项2选中") }//直接设置该项选中监听
-        radioGroup.addItem("选项3") { toast("选项3选中") }
-        radioGroup.addItem(RadioGroupLayout.RadioItem("选项4") { toast("选项4执行") })
-        radioGroup.setChecked(2)
+        devLayout.addRadioGroup()
+            .addItem("选项1")
+            .addItem("选项2") { toast("选项2选中") }//直接设置该项选中监听
+            .addItem("选项3") { toast("选项3选中") }
+            .addItem("选项4") { toast("选项4执行") }
+            .setChecked(2)
 
-        val radioGroup2 = devLayout.addRadioGroup("带标题的单项选择")
-        radioGroup2.addItem("选项4")
-        radioGroup2.addItem("选项5")
-        radioGroup2.addItem("选项6")
-        radioGroup2.addItem("选项7")
-
-        radioGroup2.setListener { index, checkedId ->//设置整体选中监听
-            toast("第${index}项选中")
-        }
+        devLayout.addRadioGroup("带标题的单项选择")
+            .addItem("选项4")
+            .addItem("选项5")
+            .addItem("选项6")
+            .addItem("选项7")
+            .setListener { index, checkedId ->//设置整体选中监听
+                toast("第${index}项选中")
+            }
 
 
         devLayout.addLine()//分割线
+
         val addKeyValueText = devLayout.addKeyValueTextView()//键值展示TextView
-        addKeyValueText.maxHeight = 150
-        addKeyValueText.clearAndAddKV("说明", "键值展示")
-        addKeyValueText.addKV("参数1", "value1")
-        addKeyValueText.addKVLn("换行", "添加参数并换行")
-        addKeyValueText.addKV("耗时", 123)
+        addKeyValueText.clear()
+            .addKV("说明", "键值展示")
+            .addKV("参数1", "value1")
+            .addKV("参数2", "value2")
+            .addKV("参数3", "value3")
+            .ln()
+            .addKV("换行", "换行")
+            .addKV("耗时", 123)
 
     }
 
