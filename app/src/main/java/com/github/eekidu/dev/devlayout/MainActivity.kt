@@ -132,8 +132,8 @@ class MainActivity : AppCompatActivity() {
          */
         val radioGroup = devLayout.addRadioGroup()
         radioGroup.addItem("选项1")
-        radioGroup.addItem("选项2").setOnCheckListener { toast("选项2选中") }//直接设置该项选中监听
-        radioGroup.addItem("选项3").setOnCheckListener { toast("选项3选中") }
+        radioGroup.addItem("选项2") { toast("选项2选中") }//直接设置该项选中监听
+        radioGroup.addItem("选项3") { toast("选项3选中") }
         radioGroup.addItem(RadioGroupLayout.RadioItem("选项4") { toast("选项4执行") })
         radioGroup.setChecked(2)
 

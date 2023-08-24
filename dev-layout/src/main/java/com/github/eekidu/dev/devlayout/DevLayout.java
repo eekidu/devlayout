@@ -2,9 +2,7 @@ package com.github.eekidu.dev.devlayout;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +54,12 @@ public class DevLayout extends LinearLayout {
         mFlexboxLayout = new FlexboxLayout(context);
         mFlexboxLayout.setFlexWrap(FlexWrap.WRAP);
         addView(mFlexboxLayout);
+        if (isInEditMode()) {
+            addTitleAndDesc("DevLayout", "动态添加常用调试控件，无需XML，简化调试页面开发过程");
+            addLine();
+            addAction("测试", v -> {
+            });
+        }
     }
 
     public DevLayout addAction(String actionName, OnClickListener onClickListener) {

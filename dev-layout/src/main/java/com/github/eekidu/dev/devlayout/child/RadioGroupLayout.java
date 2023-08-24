@@ -40,14 +40,15 @@ public class RadioGroupLayout extends HorizontalScrollView {
             this.title = title;
         }
 
-        public void setOnCheckListener(OnItemCheckListener onClickListener) {
-            mOnClickListener = onClickListener;
-        }
-
         public RadioItem(String title, OnItemCheckListener onClickListener) {
             this.title = title;
             mOnClickListener = onClickListener;
         }
+
+        public void setOnCheckListener(OnItemCheckListener onClickListener) {
+            mOnClickListener = onClickListener;
+        }
+
 
         @NonNull
         @Override
@@ -143,18 +144,20 @@ public class RadioGroupLayout extends HorizontalScrollView {
 
     List<RadioItem> mRadioItems = new LinkedList<>();
 
-    public void addItem(RadioItem radioItem) {
+    public RadioGroupLayout addItem(String item) {
+        return addItem(item, null);
+    }
+
+    public RadioGroupLayout addItem(String title, OnItemCheckListener onClickListener) {
+        return addItem(new RadioItem(title, onClickListener));
+    }
+
+    public RadioGroupLayout addItem(RadioItem radioItem) {
         if (radioItem != null) {
             mRadioItems.add(radioItem);
         }
         bindData(mRadioItems);
-    }
-
-    public RadioItem addItem(String item) {
-        RadioItem e = new RadioItem(item, null);
-        mRadioItems.add(e);
-        bindData(mRadioItems);
-        return e;
+        return this;
     }
 
     public void setRadioGroupGravity() {
