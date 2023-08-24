@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
 }
+
+group('github.eekidu.dev')
 
 android {
     namespace 'github.eekidu.dev.devlayout'

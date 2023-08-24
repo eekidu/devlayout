@@ -1,7 +1,6 @@
 package com.github.eekidu.dev.devlayout.child;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -57,7 +54,7 @@ public class RadioGroupLayout extends HorizontalScrollView {
         }
     }
 
-    private List<?> mBts;
+    private List<RadioItem> mBts;
     private int mSelectPosition = -1;
 
     //额外追加的滑动偏移，使边界的item点击后，能露出后面的一个。
@@ -66,7 +63,7 @@ public class RadioGroupLayout extends HorizontalScrollView {
 
 
     public interface OnCheckedChangeListener {
-        void onCheckedChange(int index, Object tabName);
+        void onCheckedChange(int index, String tabName);
     }
 
     private RadioGroup mRadioGroup;
@@ -110,7 +107,7 @@ public class RadioGroupLayout extends HorizontalScrollView {
                         if (group.getChildAt(i).getId() == checkedId) {
                             if (i != mSelectPosition) {
                                 if (mListener != null) {
-                                    mListener.onCheckedChange(i, mBts.get(i));
+                                    mListener.onCheckedChange(i, mBts.get(i).title);
                                 }
                                 if (mRadioItems.get(i).mOnClickListener != null) {
                                     mRadioItems.get(i).mOnClickListener.onSelect();
@@ -125,21 +122,16 @@ public class RadioGroupLayout extends HorizontalScrollView {
             }
         });
         if (isInEditMode()) {
-            List<Object> list = new ArrayList<>();
-            list.add("Radio0");
-            list.add("Radio1");
-            list.add("Radio2");
-            list.add("Radio3");
-            list.add("Radio4");
-            list.add("Radio5");
-            list.add("Radio6");
-            list.add("Radio7");
-            bindData(list);
+            addItem("Radio0");
+            addItem("Radio1");
+            addItem("Radio2");
+            addItem("Radio3");
         }
     }
 
-    public void setListener(OnCheckedChangeListener listener) {
+    public RadioGroupLayout setListener(OnCheckedChangeListener listener) {
         mListener = listener;
+        return this;
     }
 
     List<RadioItem> mRadioItems = new LinkedList<>();
@@ -174,7 +166,7 @@ public class RadioGroupLayout extends HorizontalScrollView {
 
 
     //    @StyleRes int radioBtStyle
-    public void bindData(List<?> bts) {
+    public void bindData(List<RadioItem> bts) {
         mBts = bts;
         mRadioGroup.removeAllViews();
         if (bts != null)

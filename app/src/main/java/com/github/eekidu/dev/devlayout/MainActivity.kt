@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(nestedScrollView)
 
 
+
         devLayout.setIsLineStyle(false)//ture：线性布局，false：流式布局
 
         /**
