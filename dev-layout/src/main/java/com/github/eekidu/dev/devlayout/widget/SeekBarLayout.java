@@ -1,7 +1,8 @@
-package com.github.eekidu.dev.devlayout.child;
+package com.github.eekidu.dev.devlayout.widget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -10,18 +11,23 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.github.eekidu.dev.devlayout.DevLayout;
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
+import com.github.eekidu.dev.devlayout.util.DevLayoutUtilKt;
+import com.github.eekidu.dev.devlayout.util.ListenerDelegator;
 
 /**
+ * SeekBar
+ * 标题 滑块 值展示 步进按钮
+ *
  * @author caohk
  * @date 2022/4/18
  */
 public class SeekBarLayout extends LinearLayout {
 
-    private Button mMinusBt;
-    private Button mPlusBt;
 
     public interface OnProgressChangeListener {
         void onProgressChanged(int progress);
@@ -30,9 +36,13 @@ public class SeekBarLayout extends LinearLayout {
     private TextView mTitleTv;
     private TextView mValueTv;
     private SeekBar mSeekBar;
-    private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener;
+    private Button mMinusBt;
+    private Button mPlusBt;
 
+    private final SeekBar.OnSeekBarChangeListener mInnerListener;
+    private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener;
     private OnProgressChangeListener mProgressListener;
+
 
     public SeekBarLayout(Context context) {
         this(context, null);
@@ -49,13 +59,10 @@ public class SeekBarLayout extends LinearLayout {
         mTitleTv = DevLayoutUtil.generateTitleTv(getContext());
         addView(mTitleTv);
 
-        mValueTv = new TextView(getContext());
-        mValueTv.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
-        mValueTv.setMaxLines(2);
-
 
         mSeekBar = new SeekBar(getContext());
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mInnerListener = new SeekBar.OnSeekBarChangeListener() {
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mValueTv.setText(String.valueOf(progress) + "/" + seekBar.getMax());
@@ -80,13 +87,21 @@ public class SeekBarLayout extends LinearLayout {
                     mOnSeekBarChangeListener.onStopTrackingTouch(seekBar);
                 }
             }
-        });
+        };
+        mSeekBar.setOnSeekBarChangeListener(mInnerListener);
         LayoutParams params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         addView(mSeekBar, params);
-        mValueTv.setMinHeight(DevLayoutUtil.dp2px(30));
-        addView(mValueTv, new LayoutParams(DevLayoutUtil.dp2px(60), ViewGroup.LayoutParams.WRAP_CONTENT));
 
+        //值TV
+        mValueTv = new TextView(getContext());
+        mValueTv.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
+        mValueTv.setLayoutParams(new ViewGroup.LayoutParams(DevLayoutUtil.dp2px(60), DevLayoutUtil.dp2px(30)));
+        mValueTv.setMaxLines(1);
+        DevLayoutUtilKt.setTextViewAutoSize(mValueTv, 6, 14);
+        addView(mValueTv);
+
+        //步进设置
         mMinusBt = new Button(getContext());
         mMinusBt.setText("-");
         addView(mMinusBt, new LayoutParams(DevLayoutUtil.dp2px(30), ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -98,8 +113,6 @@ public class SeekBarLayout extends LinearLayout {
             mSeekBar.setProgress(Math.max(mSeekBar.getProgress() - 1, min));
         });
 
-
-//        mPlusBt = new Button(new ContextThemeWrapper(getContext(), android.R.style.Widget_Material_ButtonBar));
         mPlusBt = new Button(getContext());
         mPlusBt.setText("+");
         mPlusBt.setLayoutParams(new LinearLayout.LayoutParams(DevLayoutUtil.dp2px(30), ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -135,8 +148,17 @@ public class SeekBarLayout extends LinearLayout {
     }
 
 
-    public SeekBarLayout setMax(int max) {
+    public SeekBarLayout setMin(int min) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mSeekBar.setMin(min);
+        }
+        return this;
+    }
+
+    public SeekBarLayout setMax(int max) {//会触发一次回调
+        mSeekBar.setOnSeekBarChangeListener(null);
         mSeekBar.setMax(max);
+        mSeekBar.setOnSeekBarChangeListener(mInnerListener);
         return this;
     }
 
@@ -148,8 +170,13 @@ public class SeekBarLayout extends LinearLayout {
     /**
      * 设置进度回调
      */
-    public SeekBarLayout setOnProgressChangeListener(OnProgressChangeListener progressListener) {
-        mProgressListener = progressListener;
+    public SeekBarLayout setOnProgressChangeListener(@NonNull OnProgressChangeListener progressListener) {
+        DevLayout devLayout = DevLayoutUtil.getParentDevLayout(this);
+        if (devLayout != null) {
+            mProgressListener = ListenerDelegator.getDelegator(devLayout, mTitleTv.getText().toString(), OnProgressChangeListener.class, progressListener);
+        } else {
+            mProgressListener = progressListener;
+        }
         return this;
     }
 

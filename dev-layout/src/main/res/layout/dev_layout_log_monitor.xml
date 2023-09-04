@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingTop="40dp"
+        app:reverseLayout="true" />
+
+    <LinearLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/dev_layout_title_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/DevLayoutTitleTv"
+                android:text="日志" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <CheckBox
+                android:id="@+id/timeCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="时间"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/clearAllBt"
+                style="@style/DevLayoutImageButton"
+                android:layout_gravity="right"
+                android:src="@android:drawable/ic_menu_delete" />
+
+            <ImageView
+                android:id="@+id/zoomUp"
+                style="@style/DevLayoutImageButton"
+                android:padding="10dp"
+                android:src="@drawable/dev_layout_icon_larger" />
+
+            <ImageView
+                android:id="@+id/zoomDown"
+                style="@style/DevLayoutImageButton"
+                android:background="?attr/selectableItemBackground"
+                android:padding="10dp"
+                android:src="@drawable/dev_layout_icon_smaller" />
+
+
+            <ImageView
+                android:id="@+id/moreBt"
+                style="@style/DevLayoutImageButton"
+                android:src="@android:drawable/ic_menu_manage" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/menuBt"
+            style="@style/DevLayoutImageButton"
+            android:layout_gravity="right"
+            android:rotation="180"
+            android:src="@android:drawable/ic_menu_more" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/goBottomBt"
+        style="@style/DevLayoutImageButton"
+        android:layout_gravity="right|bottom"
+        android:rotation="180"
+        android:src="@android:drawable/ic_menu_upload" />
+
+</merge>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dev_layout_icon">#FFFFFF</color>
+
+    <color name="dev_layout_title_text">#333333</color>
+    <color name="dev_layout_title_bg">#CCC</color>
+
+    <color name="dev_layout_divider_color">#888888</color>
+
+    <!--日志字体颜色-->
+    <color name="dev_layout_log_verbose">#7f8c8d</color>
+    <color name="dev_layout_log_info">#2ecc71</color>
+    <color name="dev_layout_log_debug">#3498db</color>
+    <color name="dev_layout_log_warn">#F4BC00</color>
+    <color name="dev_layout_log_error">#e74c3c</color>
+    <color name="dev_layout_log_bg0">#99f1f2f6</color>
+    <color name="dev_layout_log_bg1">#99f5f6fa</color>
+
+
+</resources>
