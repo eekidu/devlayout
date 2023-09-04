@@ -3,9 +3,12 @@ package com.github.eekidu.dev.devlayout
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.github.eekidu.dev.devlayout.child.SeekBarLayout
+import com.github.eekidu.dev.devlayout.widget.SeekBarLayout
+import java.util.Random
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var mDevLayout: DevLayout
+
     companion object {
         private const val TAG = "MainActivity"
     }
@@ -13,134 +16,146 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val devLayout = DevLayout(this)
-        setContentView(devLayout)
+        mDevLayout = DevLayout(this)
+        setContentView(mDevLayout)
 
 
         /**
          * 添加标题和描述
          */
-        devLayout.addTitleAndDesc("DevLayout", "使用代码动态添加常用调试控件，无需XML，简化调试页面开发过程")
-        devLayout.hr()//添加分割线
+        mDevLayout.addTitleAndDesc(
+            "DevLayout",
+            "使用代码的方式，快速添加常用调试控件，无需XML，简化调试页面开发过程"
+        )
+        mDevLayout.hr()//添加分割线
 
-        devLayout.addRadioGroup("流式Or线性")
+        /**
+         * 单选，切换布局样式
+         */
+        mDevLayout.addRadioGroup("流式Or线性")
             .addItem("流式布局") {
-                devLayout.setIsLineStyle(false)
+                mDevLayout.setIsLineStyle(false)
             }.addItem("线性布局") {
-                devLayout.setIsLineStyle(true)
+                mDevLayout.setIsLineStyle(true)
             }.setChecked(0)
+
+
+        /**
+         * 添加日志框
+         */
+        mDevLayout.addLogMonitor()
+//        mDevLayout.addLogMonitorSmall()
+//        mDevLayout.addLogMonitorLarge()
+
+        mDevLayout.hr()
 
         /**
          * 添加功能按钮
          */
-        devLayout.addAction("功能1") {
-            toast("功能1")
+        mDevLayout.addAction("功能1") {
+            1 + 1
         }
-        devLayout.addAction("功能2") {
-            toast("功能2")
+
+        mDevLayout.addAction("功能2") {
+            toast("功能2执行")
         }
 
         /**
          * 添加换行
          */
-        devLayout.br()
+        mDevLayout.br()
 
-        devLayout.addAction("功能3") {
-            toast("功能3")
-        }.addAction("功能4") {
-            toast("功能4")
+        mDevLayout.addAction("子线程日志") {
+            startPrintLog()
+        }.addAction("功能4:耗时") {
+            Thread.sleep(100)
         }
-        devLayout.addButton("功能5") {
-            toast("功能5")
+        mDevLayout.addButton("功能5:异常") {
+            1 / 0
         }
 
-
-        devLayout.addDescribeAndButton("为后面按钮的功能添加一些说明……", "按钮") {
+        mDevLayout.addDescribeAndButton("为后面按钮的功能添加一些说明……", "按钮") {
             toast("按钮")
         }
 
         /**
          * 添加分割线
          */
-        devLayout.hr()
+        mDevLayout.hr()
 
         /**
          * 添加开关
          */
-        devLayout.addSwitch("开关1") { buttonView, isChecked ->
+        mDevLayout.addSwitch("开关1") { buttonView, isChecked ->
             toast("开关1状态：$isChecked")
         }
-        devLayout.addSwitch("开关2") { _, isChecked ->
+        mDevLayout.addSwitch("开关2") { _, isChecked ->
             toast("开关2状态：$isChecked")
         }.isChecked = true
 
         /**
          * 添加分割线
          */
-        devLayout.addLine()
+        mDevLayout.addLine()
 
         /**
          * 添加SeekBar
          */
-        devLayout.addSeekBar("参数设置1") { progress ->
+        mDevLayout.addSeekBar("参数设置1") { progress ->
             toast("参数设置1：$progress")
-        }
+        }.setMax(1000).setProgress(50)
 
         val seekBar2: SeekBarLayout =
-            devLayout.addSeekBar("参数设置2").setEnableStep(true)//设置是否开启步进模式
+            mDevLayout.addSeekBar("参数设置2").setEnableStep(true)//设置是否开启步进模式
         seekBar2.setOnProgressChangeListener { progress ->
             seekBar2.valueTv.text = "${progress}dp"//自定义显示
         }.setMax(100).setProgress(50)
 
-        devLayout.addLine()
+        mDevLayout.addLine()
 
         /**
          * 添加文本框
          */
-        val textView = devLayout.addTextView("文本展示")
+        val textView = mDevLayout.addTextView("文本展示")
 
         /**
          * 添加输入框
          */
-        devLayout.addEditor("请输入") { editable ->
-            textView.text = editable.toString()
-        }
-
-        devLayout.addAction("Toast展示") {
-            toast(textView.text)
+        mDevLayout.addEditor("参数设置") { inputText ->
+            textView.text = inputText
         }
 
 
-        devLayout.addLine()
+
+        mDevLayout.addLine()
 
         /**
          * 添加多选框
          */
-
-        devLayout.addCheckBox("菜单1") { _, isChecked -> toast("菜单1状态：$isChecked") }
+        mDevLayout.addCheckBox("菜单1") { _, isChecked -> toast("菜单1状态：$isChecked") }
             .apply {
                 isChecked = true
             }
-        devLayout.br()
-        devLayout.addCheckBox("菜单2") { _, isChecked -> toast("菜单2状态：$isChecked") }
-        devLayout.addCheckBox("菜单3") { _, isChecked -> toast("菜单3状态：$isChecked") }
+        mDevLayout.br()
+        mDevLayout.addCheckBox("菜单2") { _, isChecked -> toast("菜单2状态：$isChecked") }
+        mDevLayout.addCheckBox("菜单3") { _, isChecked -> toast("菜单3状态：$isChecked") }
 
 
-        devLayout.addLine()
-        devLayout.p()//添加空白行，添加间距
+        mDevLayout.addLine()
+        mDevLayout.p()//添加空白行，添加间距
 
 
         /**
          * 添加单选框
          */
-        devLayout.addRadioGroup()
+        mDevLayout.addRadioGroup()
             .addItem("选项1")
             .addItem("选项2") { toast("选项2选中") }//直接设置该项选中监听
             .addItem("选项3") { toast("选项3选中") }
             .addItem("选项4") { toast("选项4执行") }
             .setChecked(2)
 
-        devLayout.addRadioGroup("带标题的单项选择")
+        mDevLayout.addRadioGroup("带标题的单项选择")
             .addItem("选项4")
             .addItem("选项5")
             .addItem("选项6")
@@ -148,24 +163,36 @@ class MainActivity : AppCompatActivity() {
             .setListener { index, checkedId ->//设置整体选中监听
                 toast("第${index}项选中")
             }
-
-
-        devLayout.addLine()//分割线
-
-        val addKeyValueText = devLayout.addKeyValueTextView()//键值展示TextView
-        addKeyValueText.clear()
-            .addKV("说明", "键值展示")
-            .addKV("参数1", "value1")
-            .addKV("参数2", "value2")
-            .addKV("参数3", "value3")
-            .ln()
-            .addKV("换行", "换行")
-            .addKV("耗时", 123)
-
     }
 
+
+    private lateinit var mToast: Toast
     private fun toast(info: CharSequence) {
-        Toast.makeText(this@MainActivity, info, Toast.LENGTH_SHORT).show()
+        if (!::mToast.isInitialized) {
+            mToast = Toast.makeText(this@MainActivity, info, Toast.LENGTH_SHORT)
+        }
+        mToast.setText(info)
+        mToast.show()
+    }
+
+
+    private fun startPrintLog() {
+        repeat(3) {//模拟子线程输出log
+            Thread {
+                repeat(50) {
+                    val msg = "这是一条日志信息 from ${Thread.currentThread()}"
+                    when (Random().nextInt(5)) {// 日志等级
+                        0 -> mDevLayout.log(msg)
+                        1 -> mDevLayout.logI(msg)
+                        2 -> mDevLayout.logD(msg)
+                        3 -> mDevLayout.logW(msg)
+                        4 -> mDevLayout.logE(msg)
+                    }
+                    Thread.sleep(200L + Random().nextInt(300))
+
+                }
+            }.start()
+        }
     }
 
 

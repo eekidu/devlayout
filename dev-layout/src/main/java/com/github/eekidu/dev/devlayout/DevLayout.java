@@ -1,9 +1,9 @@
 package com.github.eekidu.dev.devlayout;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Parcel;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,29 +14,33 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.widget.NestedScrollView;
 
-import com.github.eekidu.dev.devlayout.child.EditorTextLayout;
-import com.github.eekidu.dev.devlayout.child.KeyValueTextView;
-import com.github.eekidu.dev.devlayout.child.RadioGroupLayout;
-import com.github.eekidu.dev.devlayout.child.SeekBarLayout;
-import com.github.eekidu.dev.devlayout.child.TitleAndDescLayout;
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
+import com.github.eekidu.dev.devlayout.util.ListenerDelegator;
+import com.github.eekidu.dev.devlayout.widget.EditorTextLayout;
+import com.github.eekidu.dev.devlayout.widget.LogMonitorLayout;
+import com.github.eekidu.dev.devlayout.widget.RadioGroupLayout;
+import com.github.eekidu.dev.devlayout.widget.SeekBarLayout;
+import com.github.eekidu.dev.devlayout.widget.TitleAndDescLayout;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
 
+import github.eekidu.dev.devlayout.R;
+
 /**
- * 快速添加测试控件的布局
+ * 使用代码的方式，快速添加常用调试控件，无需XML，简化调试页面开发过程
  *
  * @author caohk
  * @date 2021/10/12
  */
 public class DevLayout extends NestedScrollView {
+    public static final String TAG = "DevLayout";
 
-
-    private FlexboxLayout mFlexboxLayout;
+    private final FlexboxLayout mFlexboxLayout;
     private boolean mIsLineStyleFlag;
 
     public DevLayout(Context context) {
@@ -56,7 +60,7 @@ public class DevLayout extends NestedScrollView {
         mFlexboxLayout.setFlexWrap(FlexWrap.WRAP);
         addView(mFlexboxLayout);
         if (isInEditMode()) {
-            addTitleAndDesc("DevLayout", "使用代码动态添加常用调试控件，无需XML，简化调试页面开发过程");
+            addTitleAndDesc("DevLayout", "使用代码的方式，快速添加常用调试控件，无需XML，简化调试页面开发过程");
             addLine();
             addAction("测试", v -> {
             });
@@ -68,11 +72,12 @@ public class DevLayout extends NestedScrollView {
         return this;
     }
 
+
     public Button addButton(String title, OnClickListener onClickListener) {
         Button button = new Button(getContext());
         button.setAllCaps(false);
         button.setText(title);
-        button.setOnClickListener(onClickListener);
+        button.setOnClickListener(ListenerDelegator.getDelegator(this, title, OnClickListener.class, onClickListener));
         mFlexboxLayout.addView(button, new LayoutParamOr(getWidthParam(), ViewGroup.LayoutParams.WRAP_CONTENT));
         return button;
     }
@@ -94,7 +99,7 @@ public class DevLayout extends NestedScrollView {
         Button button = new Button(getContext());
         button.setAllCaps(false);
         button.setText(btTitle);
-        button.setOnClickListener(onClickListener);
+        button.setOnClickListener(ListenerDelegator.getDelegator(this, btTitle, OnClickListener.class, onClickListener));
         linearLayout.addView(button, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         mFlexboxLayout.addView(linearLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -124,13 +129,13 @@ public class DevLayout extends NestedScrollView {
         return addSwitch(actionName, onCheckedChangeListener, false);
     }
 
-    public SwitchCompat addSwitch(String actionName, CompoundButton.OnCheckedChangeListener onCheckedChangeListener, boolean defaultCheck) {
+    public SwitchCompat addSwitch(String title, CompoundButton.OnCheckedChangeListener onCheckedChangeListener, boolean defaultCheck) {
         SwitchCompat aSwitch = new SwitchCompat(getContext());
         aSwitch.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-        aSwitch.setText(actionName);
+        aSwitch.setText(title);
         int padding = DevLayoutUtil.dp2px(10);
         aSwitch.setPadding(padding, 0, padding, 0);
-        aSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+        aSwitch.setOnCheckedChangeListener(ListenerDelegator.getDelegator(this, title, CompoundButton.OnCheckedChangeListener.class, onCheckedChangeListener));
         if (defaultCheck) {
             aSwitch.setChecked(true);
         }
@@ -141,7 +146,7 @@ public class DevLayout extends NestedScrollView {
     public CheckBox addCheckBox(String title, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
         CheckBox checkBox = new CheckBox(getContext());
         checkBox.setText(title);
-        checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
+        checkBox.setOnCheckedChangeListener(ListenerDelegator.getDelegator(this, title, CompoundButton.OnCheckedChangeListener.class, onCheckedChangeListener));
         checkBox.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         mFlexboxLayout.addView(checkBox, new LayoutParamOr(getWidthParam(), ViewGroup.LayoutParams.WRAP_CONTENT));
         return checkBox;
@@ -154,15 +159,16 @@ public class DevLayout extends NestedScrollView {
 
     public SeekBarLayout addSeekBar(String title, SeekBarLayout.OnProgressChangeListener onProgressChangeListener) {
         SeekBarLayout seekBarLayout = new SeekBarLayout(getContext());
+        mFlexboxLayout.addView(seekBarLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         seekBarLayout.getTitleTv().setText(title);
         seekBarLayout.setOnProgressChangeListener(onProgressChangeListener);
-
-        mFlexboxLayout.addView(seekBarLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return seekBarLayout;
     }
 
 
     /**
+     * 用于固定展示信息
+     *
      * @param title
      * @return Value TextView
      */
@@ -199,6 +205,8 @@ public class DevLayout extends NestedScrollView {
     public EditorTextLayout addEditor(String title, EditorTextLayout.OnSureClickListener onSureClickListener) {
         EditorTextLayout editorTextLayout = new EditorTextLayout(getContext());
         editorTextLayout.setOnSureClickListener(onSureClickListener);
+        editorTextLayout.setOnSureClickListener(ListenerDelegator.getDelegator(this, title, EditorTextLayout.OnSureClickListener.class, onSureClickListener));
+
         editorTextLayout.getTitleTextView().setText(title);
         mFlexboxLayout.addView(editorTextLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return editorTextLayout;
@@ -209,45 +217,117 @@ public class DevLayout extends NestedScrollView {
      *
      * @return
      */
+    public RadioGroupLayout addRadioGroup() {
+        return addRadioGroup(null);
+    }
+
+    /**
+     * 添加单选框
+     *
+     * @return
+     */
     public RadioGroupLayout addRadioGroup(String title) {
-        RadioGroupLayout radioGroupIndicatorView = new RadioGroupLayout(getContext());
+        RadioGroupLayout radioGroup = new RadioGroupLayout(getContext());
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setGravity(Gravity.CENTER_VERTICAL);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-        TextView textView = DevLayoutUtil.generateTitleTv(getContext());
-        textView.setText(title + ":");
-        linearLayout.addView(textView);
-        linearLayout.addView(radioGroupIndicatorView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
+        if (title != null) {
+            TextView textView = DevLayoutUtil.generateTitleTv(getContext());
+            textView.setText(title + ":");
+            linearLayout.addView(textView);
+        }
+        radioGroup.bindDevLayout(this, title);
+        linearLayout.addView(radioGroup, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         mFlexboxLayout.addView(linearLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return radioGroupIndicatorView;
+        return radioGroup;
     }
 
 
+    //<editor-folder desc="日志相关">
+    private LogMonitorLayout mLogMonitorLayout;
+
     /**
-     * 添加单选框
+     * 添加日志框
      *
      * @return
      */
-    public RadioGroupLayout addRadioGroup() {
-        RadioGroupLayout radioGroupIndicatorView = new RadioGroupLayout(getContext());
-        mFlexboxLayout.addView(radioGroupIndicatorView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return radioGroupIndicatorView;
+    public LogMonitorLayout addLogMonitor() {
+        if (mLogMonitorLayout == null) {
+            mLogMonitorLayout = new LogMonitorLayout(getContext());
+            mFlexboxLayout.addView(mLogMonitorLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        } else {
+            Log.w(TAG, "Only one can be add!");
+        }
+        return mLogMonitorLayout;
     }
 
-
     /**
-     * 添加单选框
+     * 添加日志框(小尺寸)
      *
      * @return
      */
-    public KeyValueTextView addKeyValueTextView() {
-        KeyValueTextView keyValueLayout = new KeyValueTextView(getContext());
-//        keyValueLayout.setMinHeight(DevLayoutUtil.dp2px(40));
-        mFlexboxLayout.addView(keyValueLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return keyValueLayout;
+    public LogMonitorLayout addLogMonitorSmall() {
+        LogMonitorLayout logMonitorLayout = addLogMonitor();
+        logMonitorLayout.changeSizeTo(DevLayoutUtil.dp2px(120));
+        return logMonitorLayout;
     }
+
+    /**
+     * 添加日志框(大尺寸)
+     *
+     * @return
+     */
+    public LogMonitorLayout addLogMonitorLarge() {
+        LogMonitorLayout logMonitorLayout = addLogMonitor();
+        logMonitorLayout.changeSizeBy(DevLayoutUtil.dp2px(100));
+        return logMonitorLayout;
+    }
+
+    public DevLayout log(@Nullable CharSequence log) {
+        if (mLogMonitorLayout != null) {
+            mLogMonitorLayout.log(log);
+        }
+        return this;
+    }
+
+    public DevLayout logI(@Nullable CharSequence log) {
+        if (mLogMonitorLayout != null) {
+            mLogMonitorLayout.i(log);
+        }
+        return this;
+    }
+
+    public DevLayout logD(@Nullable CharSequence log) {
+        if (mLogMonitorLayout != null) {
+            mLogMonitorLayout.d(log);
+        }
+        return this;
+    }
+
+
+    public DevLayout logW(CharSequence log) {
+        if (mLogMonitorLayout != null) {
+            mLogMonitorLayout.w(log);
+        }
+        return this;
+    }
+
+    public DevLayout logE(@NonNull CharSequence log) {
+        return logE(log, null);
+    }
+
+    public DevLayout logE(@NonNull CharSequence log, @Nullable Throwable throwable) {
+        if (mLogMonitorLayout != null) {
+            mLogMonitorLayout.e(log, throwable);
+        }
+        return this;
+    }
+
+    public boolean hasLogMonitor() {
+        return mLogMonitorLayout != null;
+    }
+
+    //</editor-folder>
 
     /**
      * 添加换行分割线
@@ -256,7 +336,7 @@ public class DevLayout extends NestedScrollView {
      */
     public DevLayout addLine() {
         View line = new View(getContext());
-        line.setBackgroundColor(Color.GRAY);
+        line.setBackgroundResource(R.color.dev_layout_divider_color);
         MarginLayoutParams params = new MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
         int margin = DevLayoutUtil.dp2px(5);
         params.setMargins(margin / 2, margin, margin / 2, margin);

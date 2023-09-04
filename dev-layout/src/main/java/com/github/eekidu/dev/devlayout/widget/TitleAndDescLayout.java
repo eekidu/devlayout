@@ -1,4 +1,4 @@
-package com.github.eekidu.dev.devlayout.child;
+package com.github.eekidu.dev.devlayout.widget;
 
 import android.content.Context;
 import android.graphics.Color;

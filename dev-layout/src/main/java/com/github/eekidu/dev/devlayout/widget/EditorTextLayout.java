@@ -1,4 +1,4 @@
-package com.github.eekidu.dev.devlayout.child;
+package com.github.eekidu.dev.devlayout.widget;
 
 import android.content.Context;
 import android.text.Editable;
@@ -93,7 +93,6 @@ public class EditorTextLayout extends LinearLayout {
             if (mOnSureClickListener != null) {
                 mOnSureClickListener.onText(mEditorText.getText());
             }
-
         });
         addView(mSureButton, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }

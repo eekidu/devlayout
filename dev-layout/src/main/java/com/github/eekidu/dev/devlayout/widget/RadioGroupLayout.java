@@ -1,4 +1,4 @@
-package com.github.eekidu.dev.devlayout.child;
+package com.github.eekidu.dev.devlayout.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,7 +13,9 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
+import com.github.eekidu.dev.devlayout.DevLayout;
+import com.github.eekidu.dev.devlayout.util.ListenerDelegator;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +26,11 @@ import java.util.List;
  * @date 2021/7/23
  */
 public class RadioGroupLayout extends HorizontalScrollView {
+
+    private DevLayout mDevLayout;
+    private String mTitle;
+
+
     public interface OnItemCheckListener {
         void onSelect();
     }
@@ -130,7 +137,11 @@ public class RadioGroupLayout extends HorizontalScrollView {
     }
 
     public RadioGroupLayout setListener(OnCheckedChangeListener listener) {
-        mListener = listener;
+        if (mDevLayout != null) {//代理点击事件
+            mListener = ListenerDelegator.getDelegator(mDevLayout, mTitle, OnCheckedChangeListener.class, listener);
+        } else {
+            mListener = listener;
+        }
         return this;
     }
 
@@ -146,10 +157,18 @@ public class RadioGroupLayout extends HorizontalScrollView {
 
     public RadioGroupLayout addItem(RadioItem radioItem) {
         if (radioItem != null) {
+            if (mDevLayout != null && radioItem.mOnClickListener != null) {//代理点击事件
+                radioItem.mOnClickListener = ListenerDelegator.getDelegator(mDevLayout, radioItem.title, OnItemCheckListener.class, radioItem.mOnClickListener);
+            }
             mRadioItems.add(radioItem);
         }
         bindData(mRadioItems);
         return this;
+    }
+
+    public void bindDevLayout(DevLayout devLayout, String title) {
+        mDevLayout = devLayout;
+        mTitle = title;
     }
 
     public void setRadioGroupGravity() {
@@ -184,11 +203,12 @@ public class RadioGroupLayout extends HorizontalScrollView {
     }
 
 
-    public void setChecked(int position) {
+    public RadioGroupLayout setChecked(int position) {
         if (position >= 0 && position < mRadioGroup.getChildCount()) {
             int id = mRadioGroup.getChildAt(position).getId();
             mRadioGroup.check(id);
         }
+        return this;
     }
 
     public int getCheckedPosition() {
