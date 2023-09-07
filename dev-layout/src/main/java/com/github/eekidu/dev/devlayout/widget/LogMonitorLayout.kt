@@ -137,7 +137,7 @@ class LogMonitorLayout @JvmOverloads constructor(
                 }
             }
         })
-        log("日志框，在UI上展示日志信息")
+        log("这里是日志框，在UI上展示日志信息")
     }
 
     fun changeSizeTo(size: Int) {
@@ -177,6 +177,11 @@ class LogMonitorLayout @JvmOverloads constructor(
         } else {
             log(Log.ERROR, log)
         }
+    }
+
+    fun showTime(showTime: Boolean): LogMonitorLayout {
+        logAdapter.setShowTime(showTime)
+        return this
     }
 
     private fun log(level: Int, log: CharSequence?) {
@@ -343,7 +348,7 @@ class LogMonitorLayout @JvmOverloads constructor(
         fun filter(it: LogBean): Boolean {
             if (it.level >= level) {
                 if (keys != null && keys!!.isNotEmpty()) {
-                    return keyFilter(it) && isContainsFlag
+                    return keyFilter(it) == isContainsFlag
                 }
                 return true
             } else {

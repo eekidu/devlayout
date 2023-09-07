@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 单选，切换布局样式
          */
-        mDevLayout.addRadioGroup("流式Or线性")
+        mDevLayout.addRadioGroup("布局方式")
             .addItem("流式布局") {
                 mDevLayout.setIsLineStyle(false)
             }.addItem("线性布局") {
@@ -141,7 +141,6 @@ class MainActivity : AppCompatActivity() {
             .apply {
                 isChecked = true
             }
-        mDevLayout.br()
         mDevLayout.addCheckBox("菜单2") { _, isChecked -> toast("菜单2状态：$isChecked") }
         mDevLayout.addCheckBox("菜单3") { _, isChecked -> toast("菜单3状态：$isChecked") }
 
@@ -155,7 +154,7 @@ class MainActivity : AppCompatActivity() {
          */
         mDevLayout.addRadioGroup()
             .addItem("选项1")
-            .addItem("选项2") { toast("选项2选中") }//直接设置该项选中监听
+            .addItem("选项2") { toast("选项2选中") }//监听方式1：直接设置该项选中监听
             .addItem("选项3") { toast("选项3选中") }
             .addItem("选项4") { toast("选项4执行") }
             .setChecked(2)
@@ -165,7 +164,7 @@ class MainActivity : AppCompatActivity() {
             .addItem("选项5")
             .addItem("选项6")
             .addItem("选项7")
-            .setListener { index, checkedId ->//设置整体选中监听
+            .setListener { index, checkedId ->//监听方式2：设置整体监听
                 toast("第${index}项选中")
             }
     }

@@ -8,6 +8,7 @@ import java.lang.reflect.Proxy
 import java.util.Locale
 
 /**
+ * 监听器代理类
  * @author caohk
  * @date 2023/9/2
  */
@@ -19,10 +20,10 @@ open class ListenerDelegator<T>(
 
     companion object {
         @JvmStatic
-        fun <T> getDelegator(devLayout: DevLayout, title: String, tclzz: Class<T>, target: T): T {
+        fun <T> getDelegator(devLayout: DevLayout, title: String, tClazz: Class<T>, target: T): T {
             return Proxy.newProxyInstance(
                 javaClass.classLoader,
-                arrayOf<Class<*>>(tclzz),
+                arrayOf<Class<*>>(tClazz),
                 ListenerDelegator(devLayout, title, target)
             ) as T
         }
