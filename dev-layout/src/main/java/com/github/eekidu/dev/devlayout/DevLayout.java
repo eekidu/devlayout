@@ -87,22 +87,23 @@ public class DevLayout extends NestedScrollView {
      * @param btTitle
      * @param onClickListener
      */
-    public void addDescribeAndButton(String desc, String btTitle, OnClickListener onClickListener) {
-        LinearLayout linearLayout = new LinearLayout(getContext());
+    public LinearLayout addDescribeAndButton(String desc, String btTitle, OnClickListener onClickListener) {
+        LinearLayout textviewAndButton = new LinearLayout(getContext());
 
         TextView titleTextView = new TextView(getContext());
         titleTextView.setText(desc);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
-        linearLayout.addView(titleTextView, params);
+        textviewAndButton.addView(titleTextView, params);
 
         Button button = new Button(getContext());
         button.setAllCaps(false);
         button.setText(btTitle);
         button.setOnClickListener(ListenerDelegator.getDelegator(this, btTitle, OnClickListener.class, onClickListener));
-        linearLayout.addView(button, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        textviewAndButton.addView(button, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        mFlexboxLayout.addView(linearLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mFlexboxLayout.addView(textviewAndButton, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return textviewAndButton;
     }
 
     /**

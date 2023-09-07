@@ -1,5 +1,6 @@
 package com.github.eekidu.dev.devlayout
 
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -70,9 +71,10 @@ class MainActivity : AppCompatActivity() {
         }.addAction("功能4:耗时") {
             Thread.sleep(100)
         }
-        mDevLayout.addButton("功能5:异常") {
+        val addButton = mDevLayout.addButton("功能5:异常") {
             1 / 0
         }
+        addButton.setTextColor(Color.RED)
 
         mDevLayout.addDescribeAndButton("为后面按钮的功能添加一些说明……", "按钮") {
             toast("按钮")
@@ -105,11 +107,14 @@ class MainActivity : AppCompatActivity() {
             toast("参数设置1：$progress")
         }.setMax(1000).setProgress(50)
 
-        val seekBar2: SeekBarLayout =
-            mDevLayout.addSeekBar("参数设置2").setEnableStep(true)//设置是否开启步进模式
-        seekBar2.setOnProgressChangeListener { progress ->
-            seekBar2.valueTv.text = "${progress}dp"//自定义显示
-        }.setMax(100).setProgress(50)
+        mDevLayout.addSeekBar("参数设置2").apply {
+            setEnableStep(true)//设置是否开启步进模式
+            setOnProgressChangeListener { progress ->
+                this.valueTv.text = "${progress}dp"//自定义显示
+            }
+            setMax(100).setProgress(50)
+        }
+
 
         mDevLayout.addLine()
 

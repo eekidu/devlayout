@@ -52,8 +52,12 @@ devLayout.addSwitch("开关1") { buttonView, isChecked ->
  * 添加换行
  */
 devLayout.br()
+/**
+ * 添加分割线
+ */
+devLayout.hr()
 
-其他类型控件见Demo
+//其他类型控件见Demo MainActivity.kt
 
 ```
 
@@ -62,9 +66,8 @@ devLayout.br()
 大部分需要调试的代码，会在控件的回调中触发，那么监控回调的执行，就可以了解调试代码执行耗时情况。
 由于控件种类很多，回调类也多种多样，如何对形形色色的回调统一进行监控？
 
-动态代理：
-
-- 减少重复代码
+创建了ListenerDelegator代理类，动态代理各种控件的回调，优点：
+- 减少了重复代码
 - 解耦合（将通用的代码逻辑与具体的业务逻辑分离）
 - AOP面向切面编程（在不修改原始对象的情况下，将额外的功能横切到应用程序的不同部分中）
 
@@ -90,4 +93,7 @@ mDevLayout.logE(msg)
 支持过滤：
 
 - 按等级
-- 按过滤词：key1|key2
+- 按过滤词：key1,key2
+
+## Demo
+<img src="https://gitee.com/ksee/DevLayout/raw/dev/demo1.png" alt="Demo" style="zoom: 33%;" />
