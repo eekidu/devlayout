@@ -3,8 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-group('github.eekidu.dev')
-
 android {
     namespace 'github.eekidu.dev.devlayout'
     compileSdk 33

@@ -57,6 +57,7 @@ class LogMonitorLayout @JvmOverloads constructor(
     private var menuShowFlag = true
 
     private var lastClickChangeMenuShowTime = 0L
+    private var enablePrintError = true
 
     init {
         inflate(context, R.layout.dev_layout_log_monitor, this)
@@ -206,6 +207,13 @@ class LogMonitorLayout @JvmOverloads constructor(
             menuBt.animate().rotation(0f).setDuration(animateDuration).start()
             menuShowFlag = false
         }
+    }
+
+    /**
+     * 异常，是打印到日志框，还是直接抛出
+     */
+    fun enablePrintError(): Boolean {
+        return enablePrintError
     }
 
     class AutoScrollBottom(val recyclerView: RecyclerView, val adapter: RecyclerView.Adapter<*>) {
@@ -454,6 +462,10 @@ class LogMonitorLayout @JvmOverloads constructor(
                 logMonitor.filter.clear()
                 logMonitor.logAdapter.notifyFilterChanged()
             }
+
+            devLayout.addSwitch("打印异常，不抛出") { _, isChecked ->
+                logMonitor.enablePrintError = isChecked
+            }.isChecked = true
 
             val win = window
             if (win != null) {

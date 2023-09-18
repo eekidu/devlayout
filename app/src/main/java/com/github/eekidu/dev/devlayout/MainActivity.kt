@@ -2,9 +2,9 @@ package com.github.eekidu.dev.devlayout
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.github.eekidu.dev.devlayout.widget.SeekBarLayout
 import java.util.Random
 
 class MainActivity : AppCompatActivity() {
@@ -167,6 +167,11 @@ class MainActivity : AppCompatActivity() {
             .setListener { index, checkedId ->//监听方式2：设置整体监听
                 toast("第${index}项选中")
             }
+
+
+        val frameLayout = mDevLayout.addViewByClass(FrameLayout::class.java)
+        frameLayout.minimumHeight = 200
+        frameLayout.setBackgroundColor(Color.GRAY)
     }
 
 

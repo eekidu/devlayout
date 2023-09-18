@@ -56,7 +56,7 @@ open class ListenerDelegator<T>(
                 }
             }
         } catch (ex: Exception) {
-            if (devLayout.hasLogMonitor()) {
+            if (devLayout.hasLogMonitor() && devLayout.logMonitorLayout!!.enablePrintError()) {
                 ex.printStackTrace()
                 devLayout.logE("Error", ex)
             } else {

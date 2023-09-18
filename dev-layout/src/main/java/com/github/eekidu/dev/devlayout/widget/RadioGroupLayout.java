@@ -28,11 +28,15 @@ import java.util.List;
 public class RadioGroupLayout extends HorizontalScrollView {
 
     private DevLayout mDevLayout;
-    private String mTitle;
+    private String mTitle = "";
 
 
     public interface OnItemCheckListener {
         void onSelect();
+    }
+
+    public interface OnCheckedChangeListener {
+        void onCheckedChange(int index, String tabName);
     }
 
 
@@ -68,10 +72,6 @@ public class RadioGroupLayout extends HorizontalScrollView {
     private int extraScrollX;
     private int itemGaps;
 
-
-    public interface OnCheckedChangeListener {
-        void onCheckedChange(int index, String tabName);
-    }
 
     private RadioGroup mRadioGroup;
     private OnCheckedChangeListener mListener;
@@ -136,13 +136,18 @@ public class RadioGroupLayout extends HorizontalScrollView {
         }
     }
 
-    public RadioGroupLayout setListener(OnCheckedChangeListener listener) {
+    public RadioGroupLayout setOnCheckedChangeListener(OnCheckedChangeListener listener) {
         if (mDevLayout != null) {//代理点击事件
             mListener = ListenerDelegator.getDelegator(mDevLayout, mTitle, OnCheckedChangeListener.class, listener);
         } else {
             mListener = listener;
         }
         return this;
+    }
+
+    @Deprecated
+    public RadioGroupLayout setListener(OnCheckedChangeListener listener) {
+        return setOnCheckedChangeListener(listener);
     }
 
     List<RadioItem> mRadioItems = new LinkedList<>();

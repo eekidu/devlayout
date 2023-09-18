@@ -29,6 +29,8 @@ import com.github.eekidu.dev.devlayout.widget.TitleAndDescLayout;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
 
+import java.lang.reflect.Constructor;
+
 import github.eekidu.dev.devlayout.R;
 
 /**
@@ -243,6 +245,21 @@ public class DevLayout extends NestedScrollView {
         return radioGroup;
     }
 
+    public <T extends View> T addViewByClass(Class<T> viewClass) {
+        return this.addViewByClass(viewClass, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    public <T extends View> T addViewByClass(Class<T> viewClass, ViewGroup.LayoutParams layoutParams) {
+        try {
+            Constructor<? extends View> declaredConstructor = viewClass.getDeclaredConstructor(Context.class);
+            View view = declaredConstructor.newInstance(getContext());
+            mFlexboxLayout.addView(view, layoutParams);
+            return (T) view;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     //<editor-folder desc="日志相关">
     private LogMonitorLayout mLogMonitorLayout;
@@ -325,7 +342,12 @@ public class DevLayout extends NestedScrollView {
     }
 
     public boolean hasLogMonitor() {
-        return mLogMonitorLayout != null;
+        return mLogMonitorLayout != null && mLogMonitorLayout.getParent() != null;
+    }
+
+    @Nullable
+    public LogMonitorLayout getLogMonitorLayout() {
+        return mLogMonitorLayout;
     }
 
     //</editor-folder>
