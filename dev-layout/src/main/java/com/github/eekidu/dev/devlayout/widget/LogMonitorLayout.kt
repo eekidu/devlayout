@@ -408,7 +408,7 @@ class LogMonitorLayout @JvmOverloads constructor(
             linearLayout.addView(devLayout)
             setContentView(linearLayout)
 
-            devLayout.setIsLineStyle(true)
+            devLayout.setIsLineStyle(false)
             devLayout.addTitleAndDesc("日志设置", "")
             devLayout.addLine()
             levelSeekBar = devLayout.addSeekBar("Level")
@@ -454,7 +454,7 @@ class LogMonitorLayout @JvmOverloads constructor(
                 logMonitor.logAdapter.notifyFilterChanged()
             }.setChecked(0)
 
-            devLayout.addAction("清空筛选") {
+            devLayout.addFullButton("清空筛选") {
                 levelSeekBar.setProgress(0)
                 andRadioGroup.setChecked(0)
                 containRadioGroup.setChecked(0)
@@ -463,9 +463,14 @@ class LogMonitorLayout @JvmOverloads constructor(
                 logMonitor.logAdapter.notifyFilterChanged()
             }
 
+            devLayout.hr()
+
             devLayout.addSwitch("打印异常，不抛出") { _, isChecked ->
                 logMonitor.enablePrintError = isChecked
             }.isChecked = true
+            devLayout.addSwitch("显示时间") { _, isCheck ->
+                logMonitor.showTime(isCheck)
+            }.isChecked = false
 
             val win = window
             if (win != null) {

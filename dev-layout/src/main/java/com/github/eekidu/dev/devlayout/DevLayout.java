@@ -84,6 +84,16 @@ public class DevLayout extends NestedScrollView {
         return button;
     }
 
+    public Button addFullButton(String title, OnClickListener onClickListener) {
+        Button button = new Button(getContext());
+        button.setAllCaps(false);
+        button.setText(title);
+        button.setOnClickListener(ListenerDelegator.getDelegator(this, title, OnClickListener.class, onClickListener));
+        mFlexboxLayout.addView(button, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return button;
+    }
+
+
     /**
      * @param desc
      * @param btTitle
