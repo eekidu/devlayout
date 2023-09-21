@@ -185,8 +185,13 @@ class LogMonitorLayout @JvmOverloads constructor(
         return this
     }
 
+    /**
+     * ?可空兼容更广 String？ null
+     */
     private fun log(level: Int, log: CharSequence?) {
-        val logBean = LogBean(level, log ?: "")
+        val logMsg = log?.toString() ?: "null"
+        Log.println(level, "DevLayout", logMsg)
+        val logBean = LogBean(level, logMsg)
         logRecyclerView.post {
             logAdapter.addLog(logBean)
         }

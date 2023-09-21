@@ -333,7 +333,7 @@ public class DevLayout extends NestedScrollView {
     }
 
 
-    public DevLayout logW(CharSequence log) {
+    public DevLayout logW(@NonNull CharSequence log) {
         if (mLogMonitorLayout != null) {
             mLogMonitorLayout.w(log);
         }
