@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import com.github.eekidu.dev.devlayout.DevLayout;
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtilKt;
-import com.github.eekidu.dev.devlayout.util.ListenerDelegator;
+import com.github.eekidu.dev.devlayout.util.ProxyListener;
 
 /**
  * SeekBar
@@ -173,7 +173,7 @@ public class SeekBarLayout extends LinearLayout {
     public SeekBarLayout setOnProgressChangeListener(@NonNull OnProgressChangeListener progressListener) {
         DevLayout devLayout = DevLayoutUtil.getParentDevLayout(this);
         if (devLayout != null) {
-            mProgressListener = ListenerDelegator.getDelegator(devLayout, mTitleTv.getText().toString(), OnProgressChangeListener.class, progressListener);
+            mProgressListener = ProxyListener.getProxy(devLayout, mTitleTv.getText().toString(), OnProgressChangeListener.class, progressListener);
         } else {
             mProgressListener = progressListener;
         }

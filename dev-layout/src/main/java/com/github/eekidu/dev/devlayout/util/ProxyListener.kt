@@ -12,19 +12,24 @@ import java.util.Locale
  * @author caohk
  * @date 2023/9/2
  */
-open class ListenerDelegator<T>(
+open class ProxyListener<T>(
     private val devLayout: DevLayout,
     private val title: String,
-    private val target: T,
+    private val realListener: T,
 ) : InvocationHandler {
 
     companion object {
         @JvmStatic
-        fun <T> getDelegator(devLayout: DevLayout, title: String, tClazz: Class<T>, target: T): T {
+        fun <T> getProxy(
+            devLayout: DevLayout,
+            title: String,
+            tClazz: Class<T>,
+            realListener: T
+        ): T {
             return Proxy.newProxyInstance(
                 javaClass.classLoader,
                 arrayOf<Class<*>>(tClazz),
-                ListenerDelegator(devLayout, title, target)
+                ProxyListener(devLayout, title, realListener)
             ) as T
         }
     }
@@ -32,29 +37,11 @@ open class ListenerDelegator<T>(
 
     override fun invoke(proxy: Any?, method: Method, args: Array<out Any>?): Any? {
         var result: Any? = null
+
+        val start = DevLayoutUtil.getTime()//1、记录起始时间
+
         try {
-            val start = DevLayoutUtil.getTime()
-
-            result = method.invoke(target, *(args ?: emptyArray()))
-
-            val nanoTime = DevLayoutUtil.getTime() - start
-            val ms = nanoTime / 1000000f
-            val format = String.format(Locale.US, "%.3fms", ms)
-            val log = "$title [耗时 : $format]"
-
-            if (ms > 16) {
-                if (devLayout.hasLogMonitor()) {
-                    devLayout.logW(log)
-                } else {
-                    Log.w(DevLayout.TAG, log)
-                }
-            } else {
-                if (devLayout.hasLogMonitor()) {
-                    devLayout.log(log)
-                } else {
-                    Log.v(DevLayout.TAG, log)
-                }
-            }
+            result = method.invoke(realListener, *(args ?: emptyArray()))
         } catch (ex: Exception) {
             if (devLayout.hasLogMonitor() && devLayout.logMonitorLayout!!.enablePrintError()) {
                 ex.printStackTrace()
@@ -63,6 +50,25 @@ open class ListenerDelegator<T>(
                 throw ex
             }
         }
+
+        val nanoTime = DevLayoutUtil.getTime() - start//3、计算耗时
+        val ms = nanoTime / 1000000f
+        val format = String.format(Locale.US, "%.3fms", ms)
+        val log = "$title [耗时 : $format]"
+        if (ms > 16) {
+            if (devLayout.hasLogMonitor()) {
+                devLayout.logW(log)
+            } else {
+                Log.w(DevLayout.TAG, log)
+            }
+        } else {
+            if (devLayout.hasLogMonitor()) {
+                devLayout.log(log)
+            } else {
+                Log.v(DevLayout.TAG, log)
+            }
+        }
+
         return result
     }
 }

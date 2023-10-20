@@ -20,7 +20,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.widget.NestedScrollView;
 
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
-import com.github.eekidu.dev.devlayout.util.ListenerDelegator;
+import com.github.eekidu.dev.devlayout.util.ProxyListener;
 import com.github.eekidu.dev.devlayout.widget.EditorTextLayout;
 import com.github.eekidu.dev.devlayout.widget.LogMonitorLayout;
 import com.github.eekidu.dev.devlayout.widget.RadioGroupLayout;
@@ -79,7 +79,7 @@ public class DevLayout extends NestedScrollView {
         Button button = new Button(getContext());
         button.setAllCaps(false);
         button.setText(title);
-        button.setOnClickListener(ListenerDelegator.getDelegator(this, title, OnClickListener.class, onClickListener));
+        button.setOnClickListener(ProxyListener.getProxy(this, title, OnClickListener.class, onClickListener));
         mFlexboxLayout.addView(button, new LayoutParamOr(getWidthParam(), ViewGroup.LayoutParams.WRAP_CONTENT));
         return button;
     }
@@ -88,7 +88,7 @@ public class DevLayout extends NestedScrollView {
         Button button = new Button(getContext());
         button.setAllCaps(false);
         button.setText(title);
-        button.setOnClickListener(ListenerDelegator.getDelegator(this, title, OnClickListener.class, onClickListener));
+        button.setOnClickListener(ProxyListener.getProxy(this, title, OnClickListener.class, onClickListener));
         mFlexboxLayout.addView(button, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return button;
     }
@@ -111,7 +111,7 @@ public class DevLayout extends NestedScrollView {
         Button button = new Button(getContext());
         button.setAllCaps(false);
         button.setText(btTitle);
-        button.setOnClickListener(ListenerDelegator.getDelegator(this, btTitle, OnClickListener.class, onClickListener));
+        button.setOnClickListener(ProxyListener.getProxy(this, btTitle, OnClickListener.class, onClickListener));
         textviewAndButton.addView(button, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         mFlexboxLayout.addView(textviewAndButton, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -148,7 +148,7 @@ public class DevLayout extends NestedScrollView {
         aSwitch.setText(title);
         int padding = DevLayoutUtil.dp2px(10);
         aSwitch.setPadding(padding, 0, padding, 0);
-        aSwitch.setOnCheckedChangeListener(ListenerDelegator.getDelegator(this, title, CompoundButton.OnCheckedChangeListener.class, onCheckedChangeListener));
+        aSwitch.setOnCheckedChangeListener(ProxyListener.getProxy(this, title, CompoundButton.OnCheckedChangeListener.class, onCheckedChangeListener));
         if (defaultCheck) {
             aSwitch.setChecked(true);
         }
@@ -159,7 +159,7 @@ public class DevLayout extends NestedScrollView {
     public CheckBox addCheckBox(String title, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
         CheckBox checkBox = new CheckBox(getContext());
         checkBox.setText(title);
-        checkBox.setOnCheckedChangeListener(ListenerDelegator.getDelegator(this, title, CompoundButton.OnCheckedChangeListener.class, onCheckedChangeListener));
+        checkBox.setOnCheckedChangeListener(ProxyListener.getProxy(this, title, CompoundButton.OnCheckedChangeListener.class, onCheckedChangeListener));
         checkBox.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         mFlexboxLayout.addView(checkBox, new LayoutParamOr(getWidthParam(), ViewGroup.LayoutParams.WRAP_CONTENT));
         return checkBox;
@@ -218,7 +218,7 @@ public class DevLayout extends NestedScrollView {
     public EditorTextLayout addEditor(String title, EditorTextLayout.OnSureClickListener onSureClickListener) {
         EditorTextLayout editorTextLayout = new EditorTextLayout(getContext());
         editorTextLayout.setOnSureClickListener(onSureClickListener);
-        editorTextLayout.setOnSureClickListener(ListenerDelegator.getDelegator(this, title, EditorTextLayout.OnSureClickListener.class, onSureClickListener));
+        editorTextLayout.setOnSureClickListener(ProxyListener.getProxy(this, title, EditorTextLayout.OnSureClickListener.class, onSureClickListener));
 
         editorTextLayout.getTitleTextView().setText(title);
         mFlexboxLayout.addView(editorTextLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -255,6 +255,13 @@ public class DevLayout extends NestedScrollView {
         return radioGroup;
     }
 
+    /**
+     * 添加自定义控件
+     *
+     * @param viewClass
+     * @param <T>
+     * @return
+     */
     public <T extends View> T addViewByClass(Class<T> viewClass) {
         return this.addViewByClass(viewClass, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
@@ -362,6 +369,9 @@ public class DevLayout extends NestedScrollView {
 
     //</editor-folder>
 
+    //<editor-folder desc="排版">
+
+
     /**
      * 添加换行分割线
      *
@@ -403,8 +413,18 @@ public class DevLayout extends NestedScrollView {
      * @return
      */
     public DevLayout p() {
+        return addSpace(10);
+    }
+
+    /**
+     * 添加空白空间
+     *
+     * @param dp
+     * @return
+     */
+    public DevLayout addSpace(int dp) {
         Space space = new Space(getContext());
-        mFlexboxLayout.addView(space, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DevLayoutUtil.dp2px(10)));
+        mFlexboxLayout.addView(space, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DevLayoutUtil.dp2px(dp)));
         return this;
     }
 
@@ -430,15 +450,17 @@ public class DevLayout extends NestedScrollView {
         }
     }
 
-
-    public FlexboxLayout getFlexboxLayout() {
-        return mFlexboxLayout;
-    }
-
     private int getWidthParam() {
         return mIsLineStyleFlag ? ViewGroup.LayoutParams.MATCH_PARENT : ViewGroup.LayoutParams.WRAP_CONTENT;
     }
 
+
+    //</editor-folder>
+
+
+    public FlexboxLayout getFlexboxLayout() {
+        return mFlexboxLayout;
+    }
 
     public static class LayoutParamOr extends FlexboxLayout.LayoutParams {
 
@@ -466,5 +488,7 @@ public class DevLayout extends NestedScrollView {
             super(in);
         }
     }
+
+
 
 }

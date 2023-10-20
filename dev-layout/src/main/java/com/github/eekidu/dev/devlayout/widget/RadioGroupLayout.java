@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.github.eekidu.dev.devlayout.DevLayout;
-import com.github.eekidu.dev.devlayout.util.ListenerDelegator;
+import com.github.eekidu.dev.devlayout.util.ProxyListener;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -138,7 +138,7 @@ public class RadioGroupLayout extends HorizontalScrollView {
 
     public RadioGroupLayout setOnCheckedChangeListener(OnCheckedChangeListener listener) {
         if (mDevLayout != null) {//代理点击事件
-            mListener = ListenerDelegator.getDelegator(mDevLayout, mTitle, OnCheckedChangeListener.class, listener);
+            mListener = ProxyListener.getProxy(mDevLayout, mTitle, OnCheckedChangeListener.class, listener);
         } else {
             mListener = listener;
         }
@@ -163,7 +163,7 @@ public class RadioGroupLayout extends HorizontalScrollView {
     public RadioGroupLayout addItem(RadioItem radioItem) {
         if (radioItem != null) {
             if (mDevLayout != null && radioItem.mOnClickListener != null) {//代理点击事件
-                radioItem.mOnClickListener = ListenerDelegator.getDelegator(mDevLayout, radioItem.title, OnItemCheckListener.class, radioItem.mOnClickListener);
+                radioItem.mOnClickListener = ProxyListener.getProxy(mDevLayout, radioItem.title, OnItemCheckListener.class, radioItem.mOnClickListener);
             }
             mRadioItems.add(radioItem);
         }
