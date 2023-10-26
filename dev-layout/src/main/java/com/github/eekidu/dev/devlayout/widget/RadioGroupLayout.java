@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.github.eekidu.dev.devlayout.DevLayout;
+import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
 import com.github.eekidu.dev.devlayout.util.ProxyListener;
 
 import java.util.LinkedList;
@@ -136,19 +137,20 @@ public class RadioGroupLayout extends HorizontalScrollView {
         }
     }
 
+    public RadioGroupLayout setListener(OnCheckedChangeListener listener) {
+        return setOnCheckedChangeListener(listener);
+    }
+
     public RadioGroupLayout setOnCheckedChangeListener(OnCheckedChangeListener listener) {
-        if (mDevLayout != null) {//代理点击事件
-            mListener = ProxyListener.getProxy(mDevLayout, mTitle, OnCheckedChangeListener.class, listener);
+        DevLayout devLayout = DevLayoutUtil.getParentDevLayout(this);
+        if (devLayout != null) {//代理点击事件
+            mListener = ProxyListener.getProxy(devLayout, mTitle, OnCheckedChangeListener.class, listener);
         } else {
             mListener = listener;
         }
         return this;
     }
 
-    @Deprecated
-    public RadioGroupLayout setListener(OnCheckedChangeListener listener) {
-        return setOnCheckedChangeListener(listener);
-    }
 
     List<RadioItem> mRadioItems = new LinkedList<>();
 
@@ -162,8 +164,9 @@ public class RadioGroupLayout extends HorizontalScrollView {
 
     public RadioGroupLayout addItem(RadioItem radioItem) {
         if (radioItem != null) {
-            if (mDevLayout != null && radioItem.mOnClickListener != null) {//代理点击事件
-                radioItem.mOnClickListener = ProxyListener.getProxy(mDevLayout, radioItem.title, OnItemCheckListener.class, radioItem.mOnClickListener);
+            DevLayout devLayout = DevLayoutUtil.getParentDevLayout(this);
+            if (devLayout != null && radioItem.mOnClickListener != null) {//代理点击事件
+                radioItem.mOnClickListener = ProxyListener.getProxy(devLayout, radioItem.title, OnItemCheckListener.class, radioItem.mOnClickListener);
             }
             mRadioItems.add(radioItem);
         }

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.github.eekidu.dev.devlayout.DevLayout
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil
+import com.github.eekidu.dev.devlayout.util.ILogger
 import github.eekidu.dev.devlayout.R
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -39,7 +40,7 @@ class LogMonitorLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr), ILogger {
 
     private val stepSize = DevLayoutUtil.dp2px(100f)
     private val minHeight = DevLayoutUtil.dp2px(120f)
@@ -154,30 +155,8 @@ class LogMonitorLayout @JvmOverloads constructor(
         logRecyclerView.requestLayout()
     }
 
-    fun log(log: CharSequence?) {
+    override fun log(log: CharSequence?) {
         log(Log.VERBOSE, log)
-    }
-
-    fun i(log: CharSequence?) {
-        log(Log.INFO, log)
-    }
-
-    fun d(log: CharSequence?) {
-        log(Log.DEBUG, log)
-    }
-
-    fun w(log: CharSequence?) {
-        log(Log.WARN, log)
-    }
-
-    fun e(log: CharSequence?, e: Throwable? = null) {
-        if (e != null) {
-            val message = e.message
-            val stackTraceToString = e.stackTraceToString()
-            log(Log.ERROR, "$log : $message\n $stackTraceToString")
-        } else {
-            log(Log.ERROR, log)
-        }
     }
 
     fun showTime(showTime: Boolean): LogMonitorLayout {
@@ -185,17 +164,42 @@ class LogMonitorLayout @JvmOverloads constructor(
         return this
     }
 
-    /**
-     * ?可空兼容更广 String？ null
-     */
-    private fun log(level: Int, log: CharSequence?) {
+    override fun logV(log: CharSequence?) {
+        log(Log.VERBOSE, log)
+    }
+
+    override fun logI(log: CharSequence?) {
+        log(Log.INFO, log)
+    }
+
+    override fun logD(log: CharSequence?) {
+        log(Log.DEBUG, log)
+    }
+
+    override fun logW(log: CharSequence?) {
+        log(Log.WARN, log)
+    }
+
+    @JvmOverloads
+    override fun logE(log: CharSequence?, throwable: Throwable?, isFromProxyListener: Boolean) {
+        if (throwable != null) {
+            val message = throwable.message
+            val stackTraceToString = throwable.stackTraceToString()
+            log(Log.ERROR, "$log : $message\n $stackTraceToString")
+        } else {
+            log(Log.ERROR, log)
+        }
+    }
+
+    override fun log(level: Int, log: CharSequence?) {
         val logMsg = log?.toString() ?: "null"
-        Log.println(level, "DevLayout", logMsg)
+        Log.println(level, DevLayout.TAG, logMsg)
         val logBean = LogBean(level, logMsg)
         logRecyclerView.post {
             logAdapter.addLog(logBean)
         }
     }
+
 
     private fun showMenu() {
         if (!menuShowFlag) {
@@ -429,7 +433,7 @@ class LogMonitorLayout @JvmOverloads constructor(
                 }
                 logMonitor.filter.level = level
                 logMonitor.logAdapter.notifyFilterChanged()
-            }.setMax(4)
+            }.setMax(4).setProgress(0)
 
             devLayout.addTitleAndDesc("", "多个关键词使用\",\"（英文）分割")
             addEditor = devLayout.addEditor("关键词") {

@@ -20,6 +20,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.widget.NestedScrollView;
 
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
+import com.github.eekidu.dev.devlayout.util.ILogger;
 import com.github.eekidu.dev.devlayout.util.ProxyListener;
 import com.github.eekidu.dev.devlayout.widget.EditorTextLayout;
 import com.github.eekidu.dev.devlayout.widget.LogMonitorLayout;
@@ -39,7 +40,7 @@ import github.eekidu.dev.devlayout.R;
  * @author caohk
  * @date 2021/10/12
  */
-public class DevLayout extends NestedScrollView {
+public class DevLayout extends NestedScrollView implements ILogger {
     public static final String TAG = "DevLayout";
 
     private final FlexboxLayout mFlexboxLayout;
@@ -318,45 +319,51 @@ public class DevLayout extends NestedScrollView {
         return logMonitorLayout;
     }
 
-    public DevLayout log(@Nullable CharSequence log) {
-        if (mLogMonitorLayout != null) {
-            mLogMonitorLayout.log(log);
+    @Override
+    public void log(@Nullable CharSequence log) {
+        logV(log);
+    }
+
+
+    @Override
+    public void logV(@Nullable CharSequence log) {
+        log(Log.VERBOSE, log);
+    }
+
+    @Override
+    public void logI(@Nullable CharSequence log) {
+        log(Log.INFO, log);
+    }
+
+    @Override
+    public void logD(@Nullable CharSequence log) {
+        log(Log.DEBUG, log);
+    }
+
+    @Override
+    public void logW(@NonNull CharSequence log) {
+        log(Log.WARN, log);
+    }
+
+
+    @Override
+    public void logE(@Nullable CharSequence log, @Nullable Throwable throwable, boolean isFromProxyListener) {
+        if (isFromProxyListener && (mLogMonitorLayout == null || !mLogMonitorLayout.enablePrintError())) {
+            throw new RuntimeException(throwable);
+        } else {
+            log(Log.ERROR, log + (throwable != null ? throwable.getMessage() + "\n" + Log.getStackTraceString(throwable) : ""));
         }
-        return this;
     }
 
-    public DevLayout logI(@Nullable CharSequence log) {
+    @Override
+    public void log(int level, @Nullable CharSequence log) {
         if (mLogMonitorLayout != null) {
-            mLogMonitorLayout.i(log);
+            mLogMonitorLayout.log(level, log);
+        } else {
+            Log.println(level, DevLayout.TAG, log != null ? log.toString() : "null");
         }
-        return this;
     }
 
-    public DevLayout logD(@Nullable CharSequence log) {
-        if (mLogMonitorLayout != null) {
-            mLogMonitorLayout.d(log);
-        }
-        return this;
-    }
-
-
-    public DevLayout logW(@NonNull CharSequence log) {
-        if (mLogMonitorLayout != null) {
-            mLogMonitorLayout.w(log);
-        }
-        return this;
-    }
-
-    public DevLayout logE(@NonNull CharSequence log) {
-        return logE(log, null);
-    }
-
-    public DevLayout logE(@NonNull CharSequence log, @Nullable Throwable throwable) {
-        if (mLogMonitorLayout != null) {
-            mLogMonitorLayout.e(log, throwable);
-        }
-        return this;
-    }
 
     public boolean hasLogMonitor() {
         return mLogMonitorLayout != null && mLogMonitorLayout.getParent() != null;
@@ -462,6 +469,7 @@ public class DevLayout extends NestedScrollView {
         return mFlexboxLayout;
     }
 
+
     public static class LayoutParamOr extends FlexboxLayout.LayoutParams {
 
         public LayoutParamOr(Context context, AttributeSet attrs) {
@@ -488,7 +496,6 @@ public class DevLayout extends NestedScrollView {
             super(in);
         }
     }
-
 
 
 }

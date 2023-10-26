@@ -163,6 +163,11 @@ public class SeekBarLayout extends LinearLayout {
     }
 
     public SeekBarLayout setProgress(int progress) {
+        if (mSeekBar.getProgress() == progress) {//这种情况不会回调，手动回调
+            if (mProgressListener != null) {
+                mProgressListener.onProgressChanged(progress);
+            }
+        }
         mSeekBar.setProgress(progress);
         return this;
     }

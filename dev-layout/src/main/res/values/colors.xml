@@ -9,9 +9,9 @@
 
     <!--日志字体颜色-->
     <color name="dev_layout_log_verbose">#7f8c8d</color>
-    <color name="dev_layout_log_info">#2ecc71</color>
-    <color name="dev_layout_log_debug">#3498db</color>
-    <color name="dev_layout_log_warn">#F4BC00</color>
+    <color name="dev_layout_log_info">#2196F3</color>
+    <color name="dev_layout_log_debug">#4CAF50</color>
+    <color name="dev_layout_log_warn">#FF9800</color>
     <color name="dev_layout_log_error">#e74c3c</color>
     <color name="dev_layout_log_bg0">#99f1f2f6</color>
     <color name="dev_layout_log_bg1">#99f5f6fa</color>
