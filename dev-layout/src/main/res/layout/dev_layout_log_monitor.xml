@@ -37,13 +37,6 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
-            <CheckBox
-                android:id="@+id/timeCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="时间"
-                android:visibility="gone" />
-
             <ImageView
                 android:id="@+id/clearAllBt"
                 style="@style/DevLayoutImageButton"

@@ -16,6 +16,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.widget.NestedScrollView;
 
@@ -35,7 +39,8 @@ import java.lang.reflect.Constructor;
 import github.eekidu.dev.devlayout.R;
 
 /**
- * 使用代码的方式，快速添加常用调试控件，无需XML，简化调试页面开发过程
+ * 使用代码的方式，快速添加常用调试控件，无需XML，简化调试页面开发过程 <p>
+ * tag:DevLayout
  *
  * @author caohk
  * @date 2021/10/12
@@ -77,7 +82,7 @@ public class DevLayout extends NestedScrollView implements ILogger {
 
 
     public Button addButton(String title, OnClickListener onClickListener) {
-        Button button = new Button(getContext());
+        AppCompatButton button = new AppCompatButton(getContext());
         button.setAllCaps(false);
         button.setText(title);
         button.setOnClickListener(ProxyListener.getProxy(this, title, OnClickListener.class, onClickListener));
@@ -86,7 +91,7 @@ public class DevLayout extends NestedScrollView implements ILogger {
     }
 
     public Button addFullButton(String title, OnClickListener onClickListener) {
-        Button button = new Button(getContext());
+        AppCompatButton button = new AppCompatButton(getContext());
         button.setAllCaps(false);
         button.setText(title);
         button.setOnClickListener(ProxyListener.getProxy(this, title, OnClickListener.class, onClickListener));
@@ -100,16 +105,16 @@ public class DevLayout extends NestedScrollView implements ILogger {
      * @param btTitle
      * @param onClickListener
      */
-    public LinearLayout addDescribeAndButton(String desc, String btTitle, OnClickListener onClickListener) {
-        LinearLayout textviewAndButton = new LinearLayout(getContext());
+    public LinearLayoutCompat addDescribeAndButton(String desc, String btTitle, OnClickListener onClickListener) {
+        LinearLayoutCompat textviewAndButton = new LinearLayoutCompat(getContext());
 
-        TextView titleTextView = new TextView(getContext());
+        AppCompatTextView titleTextView = new AppCompatTextView(getContext());
         titleTextView.setText(desc);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         textviewAndButton.addView(titleTextView, params);
 
-        Button button = new Button(getContext());
+        AppCompatButton button = new AppCompatButton(getContext());
         button.setAllCaps(false);
         button.setText(btTitle);
         button.setOnClickListener(ProxyListener.getProxy(this, btTitle, OnClickListener.class, onClickListener));
@@ -158,7 +163,7 @@ public class DevLayout extends NestedScrollView implements ILogger {
     }
 
     public CheckBox addCheckBox(String title, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
-        CheckBox checkBox = new CheckBox(getContext());
+        AppCompatCheckBox checkBox = new AppCompatCheckBox(getContext());
         checkBox.setText(title);
         checkBox.setOnCheckedChangeListener(ProxyListener.getProxy(this, title, CompoundButton.OnCheckedChangeListener.class, onCheckedChangeListener));
         checkBox.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
@@ -187,14 +192,14 @@ public class DevLayout extends NestedScrollView implements ILogger {
      * @return Value TextView
      */
     public TextView addTextView(String title) {
-        LinearLayout linearLayout = new LinearLayout(getContext());
+        LinearLayoutCompat linearLayout = new LinearLayoutCompat(getContext());
         linearLayout.setGravity(Gravity.CENTER_VERTICAL);
 
         TextView titleTextView = DevLayoutUtil.generateTitleTv(getContext());
         titleTextView.setText(title + ": ");
         linearLayout.addView(titleTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        TextView valueTextView = new TextView(getContext());
+        TextView valueTextView = new AppCompatTextView(getContext());
         valueTextView.setHint("待展示文本");
         LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params1.weight = 1;
@@ -242,9 +247,9 @@ public class DevLayout extends NestedScrollView implements ILogger {
      */
     public RadioGroupLayout addRadioGroup(String title) {
         RadioGroupLayout radioGroup = new RadioGroupLayout(getContext());
-        LinearLayout linearLayout = new LinearLayout(getContext());
+        LinearLayoutCompat linearLayout = new LinearLayoutCompat(getContext());
         linearLayout.setGravity(Gravity.CENTER_VERTICAL);
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setOrientation(LinearLayoutCompat.HORIZONTAL);
         if (title != null) {
             TextView textView = DevLayoutUtil.generateTitleTv(getContext());
             textView.setText(title + ":");

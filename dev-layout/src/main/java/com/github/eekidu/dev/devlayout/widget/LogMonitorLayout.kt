@@ -9,11 +9,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -84,13 +84,6 @@ class LogMonitorLayout @JvmOverloads constructor(
 
         val autoScrollBottom = AutoScrollBottom(logRecyclerView, logAdapter)
 
-        findViewById<CheckBox>(R.id.timeCheckBox).apply {
-            setOnCheckedChangeListener { buttonView, isChecked ->
-                logAdapter.setShowTime(isChecked)
-            }
-            isChecked = true
-        }
-
         clearBt = findViewById<View>(R.id.clearAllBt)
         clearBt.setOnClickListener {
             logAdapter.clearData()
@@ -159,8 +152,8 @@ class LogMonitorLayout @JvmOverloads constructor(
         log(Log.VERBOSE, log)
     }
 
-    fun showTime(showTime: Boolean): LogMonitorLayout {
-        logAdapter.setShowTime(showTime)
+    fun setShowTime(showTime: Boolean): LogMonitorLayout {
+        logAdapter.mShowTimeFlag = showTime
         return this
     }
 
@@ -274,7 +267,12 @@ class LogMonitorLayout @JvmOverloads constructor(
         private val mTextColors = IntArray(5)
         private val mAllData = mutableListOf<LogBean>()
         private val mData = mutableListOf<LogBean>()
-        private var mShowTimeFlag = false
+        var mShowTimeFlag = false
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
+
         private val mTimeFormat: SimpleDateFormat = SimpleDateFormat("HH:mm:ss:SSS", Locale.CHINA)
 
         init {
@@ -336,11 +334,6 @@ class LogMonitorLayout @JvmOverloads constructor(
         fun clearData() {
             mAllData.clear()
             mData.clear()
-            notifyDataSetChanged()
-        }
-
-        fun setShowTime(checked: Boolean) {
-            mShowTimeFlag = checked
             notifyDataSetChanged()
         }
 
@@ -406,6 +399,7 @@ class LogMonitorLayout @JvmOverloads constructor(
         private val addEditor: EditorTextLayout
         private val containRadioGroup: RadioGroupLayout
         private val andRadioGroup: RadioGroupLayout
+        private val showTimeSwitch: SwitchCompat
 
         init {
             val devLayout = DevLayout(context)
@@ -477,9 +471,11 @@ class LogMonitorLayout @JvmOverloads constructor(
             devLayout.addSwitch("打印异常，不抛出") { _, isChecked ->
                 logMonitor.enablePrintError = isChecked
             }.isChecked = true
-            devLayout.addSwitch("显示时间") { _, isCheck ->
-                logMonitor.showTime(isCheck)
-            }.isChecked = false
+
+            showTimeSwitch = devLayout.addSwitch("显示时间") { _, isCheck ->
+                logMonitor.setShowTime(isCheck)
+            }
+
 
             val win = window
             if (win != null) {
@@ -491,6 +487,12 @@ class LogMonitorLayout @JvmOverloads constructor(
                 lp.gravity = Gravity.BOTTOM
                 win.attributes = lp
             }
+        }
+
+        override fun show() {
+            super.show()
+            //同步外部设置的变化
+            showTimeSwitch.isChecked = logMonitor.logAdapter.mShowTimeFlag
         }
 
     }

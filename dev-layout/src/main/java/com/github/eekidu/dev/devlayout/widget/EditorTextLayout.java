@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
@@ -87,7 +89,7 @@ public class EditorTextLayout extends LinearLayout {
         addView(linearLayout, params1);
 
 
-        mSureButton = new Button(getContext());
+        mSureButton = new AppCompatButton(getContext());
         mSureButton.setText("确定");
         mSureButton.setOnClickListener(v -> {
             if (mOnSureClickListener != null) {

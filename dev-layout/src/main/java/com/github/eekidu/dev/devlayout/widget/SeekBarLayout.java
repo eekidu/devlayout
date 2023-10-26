@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.github.eekidu.dev.devlayout.DevLayout;
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
@@ -94,7 +96,7 @@ public class SeekBarLayout extends LinearLayout {
         addView(mSeekBar, params);
 
         //值TV
-        mValueTv = new TextView(getContext());
+        mValueTv = new AppCompatTextView(getContext());
         mValueTv.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
         mValueTv.setLayoutParams(new ViewGroup.LayoutParams(DevLayoutUtil.dp2px(60), DevLayoutUtil.dp2px(30)));
         mValueTv.setMaxLines(1);
@@ -102,7 +104,7 @@ public class SeekBarLayout extends LinearLayout {
         addView(mValueTv);
 
         //步进设置
-        mMinusBt = new Button(getContext());
+        mMinusBt = new AppCompatButton(getContext());
         mMinusBt.setText("-");
         addView(mMinusBt, new LayoutParams(DevLayoutUtil.dp2px(30), ViewGroup.LayoutParams.WRAP_CONTENT));
         mMinusBt.setOnClickListener(v -> {
@@ -113,7 +115,7 @@ public class SeekBarLayout extends LinearLayout {
             mSeekBar.setProgress(Math.max(mSeekBar.getProgress() - 1, min));
         });
 
-        mPlusBt = new Button(getContext());
+        mPlusBt = new AppCompatButton(getContext());
         mPlusBt.setText("+");
         mPlusBt.setLayoutParams(new LinearLayout.LayoutParams(DevLayoutUtil.dp2px(30), ViewGroup.LayoutParams.WRAP_CONTENT));
         addView(mPlusBt);

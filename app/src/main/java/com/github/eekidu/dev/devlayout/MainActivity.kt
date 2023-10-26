@@ -2,9 +2,12 @@ package com.github.eekidu.dev.devlayout
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import github.eekidu.dev.devlayout.demo.R
 import java.util.Random
 
 class MainActivity : AppCompatActivity() {
@@ -47,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         mDevLayout.addLogMonitor()
 //        mDevLayout.addLogMonitorSmall()
 //        mDevLayout.addLogMonitorLarge()
+        mDevLayout.logMonitorLayout?.setShowTime(true)
 
         mDevLayout.hr()
 
@@ -55,9 +59,7 @@ class MainActivity : AppCompatActivity() {
          */
         mDevLayout.addAction("功能1") {
             1 + 1
-        }
-
-        mDevLayout.addAction("功能2") {
+        }.addAction("功能2") {
             toast("功能2执行")
         }
 
@@ -68,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
         mDevLayout.addAction("子线程日志") {
             startPrintLog()
-        }.addAction("功能4:耗时") {
+        }.addAction("功能4:耗时方法") {
             Thread.sleep(100)
         }
         val addButton = mDevLayout.addButton("功能5:异常") {
@@ -149,7 +151,6 @@ class MainActivity : AppCompatActivity() {
         mDevLayout.p()//添加空白行，添加间距
 
 
-
         /**
          * 添加单选框
          */
@@ -169,10 +170,23 @@ class MainActivity : AppCompatActivity() {
                 toast("第${index}项选中")
             }
 
+        mDevLayout.p()
 
+        /**
+         * 添加一个布局
+         */
         val frameLayout = mDevLayout.addViewByClass(FrameLayout::class.java)
         frameLayout.minimumHeight = 200
-        frameLayout.setBackgroundColor(Color.GRAY)
+        frameLayout.setBackgroundColor(Color.LTGRAY)
+        val imageView = ImageView(this)
+        imageView.apply {
+            setImageResource(R.drawable.ic_launcher_foreground)
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).apply { gravity = Gravity.CENTER }
+        }
+        frameLayout.addView(imageView)
     }
 
 
@@ -189,7 +203,7 @@ class MainActivity : AppCompatActivity() {
     private fun startPrintLog() {
         repeat(3) {//模拟子线程输出log
             Thread {
-                repeat(50) {
+                repeat(10) {
                     val msg = "这是一条日志信息 from ${Thread.currentThread()}"
                     when (Random().nextInt(5)) {// 日志等级
                         0 -> mDevLayout.log(msg)

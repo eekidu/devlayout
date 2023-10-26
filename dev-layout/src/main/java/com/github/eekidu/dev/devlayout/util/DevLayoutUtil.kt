@@ -6,6 +6,7 @@ import android.os.Build
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
 import com.github.eekidu.dev.devlayout.DevLayout
 import github.eekidu.dev.devlayout.R
@@ -35,13 +36,9 @@ class DevLayoutUtil {
          * @return
          */
         @JvmStatic
-        fun generateTitleTv(context: Context): TextView? {
-            val textView = TextView(context)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                textView.setTextAppearance(R.style.DevLayoutTitleTv)
-            } else {
-                textView.setTextAppearance(context, R.style.DevLayoutTitleTv)
-            }
+        fun generateTitleTv(context: Context): AppCompatTextView? {
+            val textView = AppCompatTextView(context)
+            TextViewCompat.setTextAppearance(textView, R.style.DevLayoutTitleTv)
             return textView
         }
 

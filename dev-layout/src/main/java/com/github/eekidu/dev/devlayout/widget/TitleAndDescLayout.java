@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.github.eekidu.dev.devlayout.util.DevLayoutUtil;
 
@@ -38,7 +39,7 @@ public class TitleAndDescLayout extends LinearLayout {
         mTitleTv.setVisibility(GONE);
         addView(mTitleTv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        mDescTv = new TextView(getContext());
+        mDescTv = new AppCompatTextView(getContext());
         mDescTv.setTextColor(Color.GRAY);
         mDescTv.setVisibility(GONE);
         addView(mDescTv, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
