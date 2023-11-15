@@ -22,12 +22,12 @@ open class ProxyListener<T>(
         fun <T> getProxy(
             devLayout: ILogger,
             title: String,
-            tClazz: Class<T>,
+            tInterface: Class<T>,
             realListener: T
         ): T {
             return Proxy.newProxyInstance(
                 javaClass.classLoader,
-                arrayOf<Class<*>>(tClazz),
+                arrayOf<Class<*>>(tInterface),
                 ProxyListener(devLayout, title, realListener)
             ) as T
         }

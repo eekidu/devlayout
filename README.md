@@ -1,17 +1,17 @@
 # DevLayout
 
-使用代码的方式，快速添加常用调试控件，无需XML，简化调试页面开发过程
+DevLayout支持使用代码的方式，快速添加常用调试控件，无需XML，简化调试页面开发过程
 
 ## 背景
 
-我们在开发组件库的时候，通常会开发一个Demo页面或调试页面。用于展示或者调试该组件库。  
-这种页面对UI的美观度要求很低，追求的是**快速实现**。  
+我们在开发组件库的时候，通常会开发一个Demo页面，用于展示或者调试该组件库。  
+这种页面对UI的美观度要求很低，注重的是**快速实现**。  
 使用XML布局方式开发会比较繁琐，该库会简化这一页面UI的开发流程：
 
 - 对常用的控件进行了封装，可以通过调用DevLayout的方法进行创建；
 - 并按流式布局或者线性布局的方式摆放到DevLayout中。
 
-<img src="https://gitee.com/ksee/DevLayout/raw/dev/demo1.png" alt="Demo" style="zoom: 25%;" />
+<img src="img/screen.png" width="50%" height="auto" />
 
 ## 引入依赖
 
@@ -28,11 +28,11 @@ allprojects {
 
 在Module的build.gradle在添加以下代码
 
-最新版本：[![](https://jitpack.io/v/com.gitee.ksee/DevLayout.svg)](https://jitpack.io/#com.gitee.ksee/DevLayout)
+
+最新版本：[![](https://jitpack.io/v/eekidu/devlayout.svg)](https://jitpack.io/#eekidu/devlayout)
 
 ```groovy
-implementation 'com.gitee.ksee:DevLayout:版本号'
-
+implementation 'com.github.eekidu:devlayout:Tag'
 ```
 
 ## 使用
@@ -41,7 +41,7 @@ DevLayout是一个ViewGroup，你可以把它摆放到页面上合适的位置�
 
 ```Kotlin
 //1、创建或者获取一个DevLaout实例
-var devLayout = findViewById<DevLayout>(R.id.devLayout)
+var mDevLayout = findViewById<DevLayout>(R.id.devLayout)
 
 
 //2、调用方法添加调试控件
@@ -49,14 +49,14 @@ var devLayout = findViewById<DevLayout>(R.id.devLayout)
 /**
  * 添加功能按钮
  */
-devLayout.addButton("功能1") {
+mDevLayout.addButton("功能1") {
     //点击回调
 }
 
 /**
  * 添加开关
  */
-devLayout.addSwitch("开关1") { buttonView, isChecked ->
+mDevLayout.addSwitch("开关1") { buttonView, isChecked ->
     //状态切换回调
 }
 
@@ -103,11 +103,11 @@ mDevLayout.logE(msg)
 /**
  * 添加换行
  */
-devLayout.br()
+mDevLayout.br()
 /**
  * 添加分割线
  */
-devLayout.hr()
+mDevLayout.hr()
 
 //其他类型控件见Demo MainActivity.kt
 
@@ -120,7 +120,8 @@ devLayout.hr()
 伪代码如下：
 
 ~~~kotlin
-    class ClickProxyListener(val realListener: OnClickListener) : OnClickListener {
+class ClickProxyListener(val realListener: OnClickListener) : OnClickListener {
+  
         override fun onClick(v: View) {
             val startTime = Now()// 1、记录起始时间
 
@@ -129,14 +130,21 @@ devLayout.hr()
             val eTime = Now() - startTime//2、计算执行耗时
             log("执行耗时：${eTime}")
         }
-    }
+}
+
+//创建代理对象
+val listenerProxy = ClickProxyListener(realListener)
 ~~~
 
 
 
 由于控件种类很多，回调类的类型也都不一样，如何对形形色色的回调统一进行监控？  
 
-动态代理：创建了ProxyListener代理类，对原有回调进行代理
+
+
+
+
+动态代理：封装了ProxyListener代理类，对原始回调进行代理
 
 ~~~kotlin
 open class ProxyListener<T>(val realListener: T) : InvocationHandler {
@@ -151,11 +159,16 @@ open class ProxyListener<T>(val realListener: T) : InvocationHandler {
         return result
     }
 }
+
+//动态创建代理对象
+val listener = Proxy.newProxyInstance(_, listenerInterface , ProxyListener(realListener)) 
 ~~~
 
 
 
-动态代理的优点包括：
+
+
+结合该例子感受动态代理的优点：
 
 - 灵活性：动态代理允许在运行时创建代理对象，而不需要在编译时指定具体的代理类。这使得代理对象可以根据需要动态地适应不同的接口和实现类。
 
@@ -171,7 +184,7 @@ open class ProxyListener<T>(val realListener: T) : InvocationHandler {
 
 ## 日志
 
-日志是调试代码的重要手段，有的场景下需要将日志输出到UI上，方便在手机没有连接Logcat，无法通过控制台监测日志时，也能对程序执行的中间过程或执行结果有一定的展示。  
+日志是调试代码的重要方式，在某些场景下需要将日志输出到UI上，方便在设备没有连接Logcat，无法通过控制台监测日志时，也能对程序执行的中间过程或执行结果有一定的展示。  
 
 我们可以添加一个日志框到UI界面上，以此来展示Log信息，方式如下：
 
@@ -189,7 +202,13 @@ mDevLayout.logW(msg)
 mDevLayout.logE(msg)
 ```
 
+<img src="img/applog.png" width="50%" height="auto"/>
+
 支持过滤：
 
 - 按等级过滤
 - 按关键词过滤，多关键字格式：key1,key2
+
+同时，日志信息会在Logcat控制台输出，通过 `tag:DevLayout` 进行过滤查看。
+
+<img src="img/log.png"/>

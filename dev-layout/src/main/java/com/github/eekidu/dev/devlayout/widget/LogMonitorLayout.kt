@@ -152,6 +152,9 @@ class LogMonitorLayout @JvmOverloads constructor(
         log(Log.VERBOSE, log)
     }
 
+    /**
+     * 是否显示时间
+     */
     fun setShowTime(showTime: Boolean): LogMonitorLayout {
         logAdapter.mShowTimeFlag = showTime
         return this
@@ -267,7 +270,9 @@ class LogMonitorLayout @JvmOverloads constructor(
         private val mTextColors = IntArray(5)
         private val mAllData = mutableListOf<LogBean>()
         private val mData = mutableListOf<LogBean>()
-        var mShowTimeFlag = false
+
+        //是否显示时间，默认显示
+        var mShowTimeFlag = true
             set(value) {
                 field = value
                 notifyDataSetChanged()
@@ -353,7 +358,7 @@ class LogMonitorLayout @JvmOverloads constructor(
         var level: Int = 0
         var keys: List<String>? = null
         var isContainsFlag = true//关键词过滤，是满足包含还是不包含关系
-        var isAndFlag = true//多关键词过滤，满足的是"与"还是"或"
+        var isAndFlag = true//多关键词过滤，满足关系是："与" 还是 "或"
 
         fun filter(it: LogBean): Boolean {
             if (it.level >= level) {
