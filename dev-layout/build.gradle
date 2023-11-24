@@ -36,29 +36,30 @@ dependencies {
 
 //---------------------------------------------
 
-// 指定编码
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+tasks.withType(Javadoc).configureEach {
+    failOnError false
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
 }
 
-// 打包源码
-task sourcesJar(type: Jar) {
+tasks.register('sourcesJar', Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
 }
 
-task javadoc(type: Javadoc) {
+tasks.register('javadoc', Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
 
-
 artifacts {
-    archives sourcesJar
     archives javadocJar
+    archives sourcesJar
 }
