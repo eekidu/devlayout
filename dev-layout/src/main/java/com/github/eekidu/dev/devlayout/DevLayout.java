@@ -81,6 +81,13 @@ public class DevLayout extends NestedScrollView implements ILogger {
     }
 
 
+    /**
+     * 添加一个Button
+     *
+     * @param title
+     * @param onClickListener
+     * @return
+     */
     public Button addButton(String title, OnClickListener onClickListener) {
         AppCompatButton button = new AppCompatButton(getContext());
         button.setAllCaps(false);
@@ -90,6 +97,13 @@ public class DevLayout extends NestedScrollView implements ILogger {
         return button;
     }
 
+    /**
+     * 添加一个宽度match_parent的Button
+     *
+     * @param title
+     * @param onClickListener
+     * @return
+     */
     public Button addFullButton(String title, OnClickListener onClickListener) {
         AppCompatButton button = new AppCompatButton(getContext());
         button.setAllCaps(false);
@@ -101,6 +115,8 @@ public class DevLayout extends NestedScrollView implements ILogger {
 
 
     /**
+     * 添加一个带描述信息的Button
+     *
      * @param desc
      * @param btTitle
      * @param onClickListener
